@@ -2,9 +2,11 @@
 /**
  * @file
  * Removing all PDF set variables.
- *
- * Implement Hook_uninstall().
  */
+
+/**
+* Implements Hook_uninstall().
+*/
 
 function pdf_using_mpdf_uninstall() {
   variable_del('mpdf_library_exist');
