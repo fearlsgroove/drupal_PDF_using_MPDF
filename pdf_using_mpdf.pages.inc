@@ -59,7 +59,7 @@ function pdf_using_mpdf_generate_pdf() {
 /**
  * Generate node object if alias is given, or simply load node using nid.
  *
- * @param $path string
+ * @param string $path
  *   path given for a node.
  *
  * @return node
@@ -96,9 +96,9 @@ function _pdf_using_mpdf_node_generator($path) {
 /**
  * Generate the PDF file using the mPDF library.
  *
- * @param $html string
+ * @param string $html
  *   contents of the template already with the node data.
- * @param $filename string
+ * @param string $filename
  *   name of the PDF file to be generated.
  */
 function _pdf_using_mpdf_generator($html, $filename = NULL) {
