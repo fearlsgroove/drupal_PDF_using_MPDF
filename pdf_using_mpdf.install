@@ -8,7 +8,6 @@
 /**
  * Implements hook_uninstall().
  */
-
 function pdf_using_mpdf_uninstall() {
   variable_del('mpdf_library_exist');
   variable_del('pdf_page_size');
