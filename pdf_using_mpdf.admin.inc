@@ -2,6 +2,7 @@
 
 /**
  * @file
+ *
  * Contains the administrative functions of the PDF conversion module.
  *
  * This file is included by the PDF conversion module, and includes the
@@ -167,7 +168,7 @@ function pdf_using_mpdf_config() {
       '#title' => t('PDF Filename'),
       '#description' => 'If no name given to PDF file, Default filename : "' . PDF_DEFAULT_FILENAME . '" will be used.',
       '#default_value' => isset($filename) && $filename != NULL ? $filename : PDF_DEFAULT_FILENAME,
-    ); 
+    );
     $form['pdf']['save_config'] = array(
       '#type' => 'submit',
       '#value' => t('Save Configuration'),
