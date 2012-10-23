@@ -1,0 +1,6 @@
+name = Custom MPDF
+description = HTML to PDF conversion Using mPDF.
+core = 7.x
+package = PDF
+configure = admin/config/user-interface/custom_mpdf
+

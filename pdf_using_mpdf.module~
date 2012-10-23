@@ -1,0 +1,199 @@
+<?php
+
+/**
+ * @file
+ * Prints PDF for a given html node view
+ *
+ */
+
+define('MPDF_LIB_PATH', 'sites/all/libraries/mpdf');
+define('MPDF_MODULE_PATH', drupal_get_path('module', 'pdf_using_mpdf') );
+define('MPDF_API_FILE', 'mpdf.php');
+define('PDF_DEFAULT_FILENAME' , '[site:name] - [node:title] - [node:changed:custom:Y-m-d]' );
+define('PDF_FONT_SIZE', 10);
+define('PDF_PAGE_SIZE', 'A4');
+
+// Loading 'pdf_using_mpdf.pages.inc' file
+module_load_include('inc', 'pdf_using_mpdf', 'pdf_using_mpdf.pages');
+
+/**
+ * Implement Hook_help().
+ */
+function pdf_using_mpdf_help($path , $arg) {
+  if ( $path == 'admin/help#pdf_using_mpdf') {
+    $data = t('<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This module is used Conversion of HTML page to PDF using mPDF PHP Library. This module allows you to generate the pdf documents of any node:<br><br><b>PDF creation (at www.example.com/show_pdf/nid)</b><br><br> where nid is the node id of content to render.<br>
+<br>By creating your own CSS file and/or the pdf--node.tpl.php files, it is possible to change the look of the output page to suit your taste. For a more fine-grained customization, it is possible to use a template file named:<br><br><b>Drupal 7: pdf--node--[node-type|node-id].tpl.php</b><br>located in the same module directory i.e., "pdf_using_mpdf".<br>Where node-type & node-id are Drupal node\'s type (e.g. page, story, etc.) and node-id (eg: 12) respectively.<br><br><b>API Function : pdf_using_mpdf_api()</b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This API function is available to content developers that prefer  to generate a pdf file of custom path. The function takes two parameters, first a rendered html content and an optional second parameter, name of the pdf file. E.g:   pdf_using_mpdf_api($html) where $html is any html content.<br><br>You must install the following third-party tools to generate PDFs:<br><br>' . l('mPDF', 'http://www.mpdf1.com') . '<br><br>Please follow the instructions in the README.txt files carefully.<br><br>Developed By : ' . l('OSSCube', 'http://www.osscube.com/') . '<br><br></p>' );
+  
+  return $data;
+  }
+}
+
+/**
+ * Implement Hook_permission().
+ */
+function pdf_using_mpdf_permission() {
+  return array(
+    'administer custom mpdf' => array(
+      'title' => t('PDF using mPDF'),
+      'description' => t('Permission for HTML to PDF conversion'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function pdf_using_mpdf_menu() {
+  $items['admin/config/user-interface/mpdf'] = array(
+    'title' => 'PDF using mPDF settings',
+    'description' => 'configuration of custom mPDF setting',
+    'page callback' => 'drupal_get_form',
+    'access callback' => TRUE,
+    'page arguments' => array('pdf_using_mpdf_config'),
+    'weight' => -1,
+    'file' => 'pdf_using_mpdf.admin.inc',
+  );
+  $items['show_pdf/%'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('pdf_using_mpdf_generate_pdf'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'pdf_using_mpdf.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function pdf_using_mpdf_theme() {
+  $theme = array();
+  $theme['pdf_node'] = array(
+   'variables' => array('node' => NULL),
+   'template' => 'pdf--node',
+  );
+  // For node type only.
+  $arg = arg();
+  $node = _pdf_using_mpdf_node_generator($arg[count($arg) - 1]);
+ 
+  if (!empty($node)) {
+    $theme['pdf_node_type'] = array(
+      'variables' => array('node' => NULL),
+      'template' => 'pdf-node-' . $node->type,
+    );
+ 
+    $theme['pdf_node_id'] = array(
+      'variables' => array('node' => NULL),
+      'template' => 'pdf-node-' . $node->nid,
+    );
+  }
+  return $theme;
+} 
+
+/**
+ * Implements hook_node_view_alter().
+ */
+function pdf_using_mpdf_node_view_alter(&$build) {
+  if ($build['#view_mode'] == 'full') {
+    $build['links']['node']['#links']['generate_pdf'] = array(
+      'href' => 'show_pdf/' . $build['#node'] -> nid,
+      'title' => t('Generate PDF document'),
+    );
+  }
+}
+
+/**
+ * configuration form control on submit
+ */
+function pdf_using_mpdf_config_submit($form, $form_state) {
+
+  variable_set( 'pdf_page_size' , $_REQUEST['page_size'] );
+  variable_set( 'pdf_font_size' , $_REQUEST['font_size'] );
+  if (isset($_REQUEST['filename']) && $_REQUEST['filename'] != NULL ) {
+    variable_set( 'pdf_filename' , $_REQUEST['filename'] );
+  }
+  else {
+    variable_set( 'pdf_filename' , PDF_DEFAULT_FILENAME);
+  }
+  if (isset($_REQUEST['h_left'])) {
+    variable_set( 'pdf_header_left' , $_REQUEST['h_left'] );
+  }
+  if (isset($_REQUEST['h_center'])) {
+    variable_set( 'pdf_header_center' , $_REQUEST['h_center']);
+  }
+  if (isset($_REQUEST['h_right'])) {
+    variable_set( 'pdf_header_right' , $_REQUEST['h_right']);
+  }
+  if (isset($_REQUEST['f_left'])) {
+    variable_set( 'pdf_footer_left' , $_REQUEST['f_left']);
+  }
+  if (isset($_REQUEST['f_center'])) {
+    variable_set( 'pdf_footer_center' , $_REQUEST['f_center']);
+  }
+  if (isset($_REQUEST['f_right'])) {
+    variable_set( 'pdf_footer_right' , $_REQUEST['f_right']);
+  }
+  if ( isset($form['pdf']['save_pdf']['#options'][$_REQUEST['save_pdf']]))  {
+    variable_set( 'pdf_save_option' , $form['pdf']['save_pdf']['#options'][$_REQUEST['save_pdf']] );
+  }
+  else {
+    variable_set( 'pdf_save_option' , PDF_DEFAULT_SAVE_OPTION );
+  }
+  // Setting for PDF password
+  if (isset( $_REQUEST['password']['pass2']) && $_REQUEST['password']['pass2'] !=NULL ) {
+    variable_set('pdf_password', $_REQUEST['password']['pass2']);
+  }
+  if (isset( $_REQUEST['remove_pwd']) && $_REQUEST['remove_pwd'] !=NULL ) {
+    variable_set('pdf_password', NULL);
+  }
+  // Setting for cutom style sheets
+  if (isset( $_REQUEST['css_file']) && $_REQUEST['css_file'] !=NULL ) {
+    variable_set('pdf_css_file', $_REQUEST['css_file']);
+  }
+  if (isset( $_REQUEST['remove_css']) && $_REQUEST['remove_css'] !=NULL ) {
+    variable_set('pdf_css_file', NULL);
+  }
+  // Setting for watermark text
+  if (isset($_REQUEST['watermark_text'])) {
+    variable_set( 'pdf_watermark_text' , $_REQUEST['watermark_text'] );
+  }
+  // Setting for PDF Author
+  if (isset($_REQUEST['pdf_author'])) {
+    variable_set('pdf_set_author' , $_REQUEST['pdf_author'] );
+  }
+  // Setting for PDF Subject
+  if (isset($_REQUEST['pdf_subject'])) {
+    variable_set('pdf_set_subject' , $_REQUEST['pdf_subject'] );
+  }
+  
+  drupal_set_message(t('PDF settings has been saved successfully.'));
+}
+
+/**
+ * configuration form Validation check
+ */
+function pdf_using_mpdf_config_validate($form, $form_state) {
+  if ( !(is_numeric($_REQUEST['font_size']) && $_REQUEST['font_size'] > 1) ) {
+    form_set_error('font_size', t('Font size should be numeric and greater than 1.'));
+  }
+}
+
+/**
+ * API to generate a PDF file
+ *
+ * @param html
+ *   Rendered HTML that will be converted into PDF
+ * @param pdf_filename
+ *   Optional name of the PDF file
+ * 
+ * @return
+ *   PDF file generated using mPDF library
+ */
+function pdf_using_mpdf_api($html, $pdf_filename = NULL) {
+  if ($pdf_filename === NULL) {
+    $filename = explode(variable_get( 'pdf_filename' , 'PDF_DEFAULT_FILENAME'), '[site:name]');
+    $pdf_filename = token_replace($filename[0]);
+  }
+  return _pdf_using_mpdf_generator($html, $pdf_filename);
+}
+/* *********************** Module End ***************************** */
