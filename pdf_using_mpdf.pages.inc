@@ -2,7 +2,7 @@
 
 /**
  * @file
- *    Contains all description to generate PDF document from raw HTML content.
+ * Contains all description to generate PDF document from raw HTML content.
  */
 
 /**
@@ -151,7 +151,7 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
 
     'Letter' => array('w' => 215.9, 'h' => 279.4),
     'Legal' => array('w' => 215.9, 'h' => 355.6),
-    'Ledger' => array('w' => 279.4, 'h' => 431.8), 
+    'Ledger' => array('w' => 279.4, 'h' => 431.8),
   );
 
   $root_path = drupal_get_path('module', 'pdf_using_mpdf');
@@ -200,14 +200,14 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
         ),
         'even' => array(),
       );
-      $mpdf -> SetHeader($header);
+      $mpdf->SetHeader($header);
     }
 
     $footer_left = variable_get('pdf_footer_left');
     $footer_center = variable_get('pdf_footer_center');
     $footer_right = variable_get('pdf_footer_right');
     // Enabling Footer option if available.
-    if ($footer_left  != NULL || $footer_center != NULL || $footer_right != NULL) {
+    if ($footer_left != NULL || $footer_center != NULL || $footer_right != NULL) {
       $footer = array(
         'odd' => array(
           'L' => array(
@@ -215,60 +215,62 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
               'font-size' => 9,
               'font-style' => 'B',
               'font-family' => 'serif',
-              'color' => 'gray'
-            ),
-            'C' => array(
+              'color' => 'gray',
+          ),
+          'C' => array(
               'content' => $footer_center,
               'font-size' => 9,
               'font-style' => 'B',
               'font-family' => 'serif',
-              'color' => 'gray'
-            ),
-            'R' => array(
+              'color' => 'gray',
+          ),
+          'R' => array(
               'content' => $footer_right,
               'font-size' => 9,
               'font-style' => 'B',
               'font-family' => 'serif',
-              'color' => 'gray'
-            ),
-            'line' => 1,
+              'color' => 'gray',
           ),
-          'even' => array()
+          'line' => 1,
+        ),
+        'even' => array(),
       );
-      $mpdf -> SetFooter($footer); 
+      $mpdf->SetFooter($footer);
     }
 
-    // Setting Watermark Text to PDF
-    $text = variable_get( 'pdf_watermark_text');
-    if (isset($text) && $text != NULL ) {
-      $mpdf -> SetWatermarkText( $text, '0.1');  // '0.1' opacity level (from 0.1 to 0.9)
-      $mpdf -> showWatermarkText = TRUE;
+    // Setting Watermark Text to PDF.
+    $text = variable_get('pdf_watermark_text');
+    if (isset($text) && $text != NULL) {
+      // '0.1' opacity level (from 0.1 to 0.9).
+      $mpdf->SetWatermarkText($text, '0.1');
+      $mpdf->showWatermarkText = TRUE;
     }
-    // Setting Author to PDF
-    $author = variable_get( 'pdf_set_author');
+    // Setting Author to PDF.
+    $author = variable_get('pdf_set_author');
     if (isset($author) && $author != NULL ) {
-      $mpdf -> SetAuthor($author);
+      $mpdf->SetAuthor($author);
     }
-    // Setting Subject to PDF
-    $subject = variable_get( 'pdf_set_subject');
-    if (isset($subject) && $subject != NULL ) {
-      $mpdf -> SetSubject($subject);
+    // Setting Subject to PDF.
+    $subject = variable_get('pdf_set_subject');
+    if (isset($subject) && $subject != NULL) {
+      $mpdf->SetSubject($subject);
     }
 
-    // Setting Password to PDF
+    // Setting Password to PDF.
     $password = variable_get('pdf_password');
-    if (isset($password) && $password != NULL ) {
-      $mpdf -> SetProtection(array('print', 'copy'), $password, $password);   // Print and Copy is allowed
+    if (isset($password) && $password != NULL) {
+      // Print and Copy is allowed.
+      $mpdf->SetProtection(array('print', 'copy'), $password, $password);
     }
 
     // Setting CSS stylesheet to PDF
     $stylesheet = variable_get('pdf_css_file');
 
-    if (isset($stylesheet) && $stylesheet != NULL ) {
-      $css_file =  file_scan_directory($root_path , '/.*\.css$/' ) ;
-      if ( isset($css_file[ $root_path . '/' . $stylesheet] ) ) {
+    if (isset($stylesheet) && $stylesheet != NULL) {
+      $css_file = file_scan_directory($root_path , '/.*\.css$/');
+      if (isset($css_file[ $root_path . '/' . $stylesheet])) {
         $stylesheet = file_get_contents($root_path . '/' . $stylesheet);
-        $mpdf -> WriteHTML($stylesheet, 1);
+        $mpdf->WriteHTML($stylesheet, 1);
       }
       else {
         drupal_set_message(t('CSS style Sheet mentioned in PDF setting was not found.'), 'warning');
