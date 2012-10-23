@@ -2,6 +2,10 @@
 
 /**
  * @file
+ *    Contains all description to generate PDF document from raw HTML content.
+ */
+
+/**
  * Generate HTML of a given node.
  *
  * @return mpdf
@@ -22,16 +26,16 @@ function pdf_using_mpdf_generate_pdf() {
     $theme_path = drupal_get_path('module', 'pdf_using_mpdf');
 
     $pdf_filename = variable_get('pdf_filename', PDF_DEFAULT_FILENAME);
-    $pdf_filename = token_replace($pdf_filename , array('node' => $node));
-    $file = file_scan_directory($theme_path ,'/pdf.*\.tpl.php$/');
+    $pdf_filename = token_replace($pdf_filename, array('node' => $node));
+    $file = file_scan_directory($theme_path, '/pdf.*\.tpl.php$/');
 
     // Finding 'pdf-node--[node_id].tpl.php' - First priority.
-    if (isset ($file[$theme_path . '/' . 'pdf--node--' . $node->nid . '.tpl.php'])){
+    if (isset ($file[$theme_path . '/' . 'pdf--node--' . $node->nid . '.tpl.php'])) {
       $html = theme('pdf_node_id', array('node' => $node));
     }
 
     // Finding 'pdf-node--[node_type].tpl.php' - Second priority.
-    elseif (isset($file[$theme_path . '/' . 'pdf--node--' . $node->type . '.tpl.php'])){
+    elseif (isset($file[$theme_path . '/' . 'pdf--node--' . $node->type . '.tpl.php'])) {
       $html = theme('pdf_node_type', array('node' => $node));
     }
 
@@ -58,7 +62,7 @@ function pdf_using_mpdf_generate_pdf() {
  * @param $path
  *   path given for a node.
  *
- * @return $node
+ * @return node
  *   node array for a given path.
  */
 function _pdf_using_mpdf_node_generator($path) {
@@ -89,8 +93,8 @@ function _pdf_using_mpdf_node_generator($path) {
   }
 }
 
-/** 
- * Generate the PDF file using the mPDF library
+/**
+ * Generate the PDF file using the mPDF library.
  *
  * @param $html
  *   contents of the template already with the node data.
