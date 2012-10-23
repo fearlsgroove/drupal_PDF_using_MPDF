@@ -1,12 +1,13 @@
 <?php
+
 /**
  * @file
  * Removing all PDF set variables.
  */
 
 /**
-* Implements Hook_uninstall().
-*/
+ * Implements hook_uninstall().
+ */
 
 function pdf_using_mpdf_uninstall() {
   variable_del('mpdf_library_exist');

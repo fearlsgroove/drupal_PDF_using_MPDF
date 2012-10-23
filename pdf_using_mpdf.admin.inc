@@ -2,12 +2,12 @@
 
 /**
  * @file
- *
  * Contains the administrative functions of the PDF conversion module.
  *
  * This file is included by the PDF conversion module, and includes the
  * settings form.
  */
+
 /**
  * Admin configure form control on page.
  */
