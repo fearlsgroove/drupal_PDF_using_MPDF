@@ -212,24 +212,24 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
         'odd' => array(
           'L' => array(
             'content' => $footer_left,
-              'font-size' => 9,
-              'font-style' => 'B',
-              'font-family' => 'serif',
-              'color' => 'gray',
+            'font-size' => 9,
+            'font-style' => 'B',
+            'font-family' => 'serif',
+            'color' => 'gray',
           ),
           'C' => array(
-              'content' => $footer_center,
-              'font-size' => 9,
-              'font-style' => 'B',
-              'font-family' => 'serif',
-              'color' => 'gray',
+            'content' => $footer_center,
+            'font-size' => 9,
+            'font-style' => 'B',
+            'font-family' => 'serif',
+            'color' => 'gray',
           ),
           'R' => array(
-              'content' => $footer_right,
-              'font-size' => 9,
-              'font-style' => 'B',
-              'font-family' => 'serif',
-              'color' => 'gray',
+            'content' => $footer_right,
+            'font-size' => 9,
+            'font-style' => 'B',
+            'font-family' => 'serif',
+            'color' => 'gray',
           ),
           'line' => 1,
         ),
@@ -247,7 +247,7 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
     }
     // Setting Author to PDF.
     $author = variable_get('pdf_set_author');
-    if (isset($author) && $author != NULL ) {
+    if (isset($author) && $author != NULL) {
       $mpdf->SetAuthor($author);
     }
     // Setting Subject to PDF.
@@ -263,12 +263,12 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
       $mpdf->SetProtection(array('print', 'copy'), $password, $password);
     }
 
-    // Setting CSS stylesheet to PDF
+    // Setting CSS stylesheet to PDF.
     $stylesheet = variable_get('pdf_css_file');
 
     if (isset($stylesheet) && $stylesheet != NULL) {
-      $css_file = file_scan_directory($root_path , '/.*\.css$/');
-      if (isset($css_file[ $root_path . '/' . $stylesheet])) {
+      $css_file = file_scan_directory($root_path ,'/.*\.css$/');
+      if (isset($css_file[$root_path . '/' . $stylesheet])) {
         $stylesheet = file_get_contents($root_path . '/' . $stylesheet);
         $mpdf->WriteHTML($stylesheet, 1);
       }
@@ -277,17 +277,19 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
         return;
       }
     }
-    // writing html content for pdf buffer
-    $mpdf -> WriteHTML($html);
+    // Writing html content for pdf buffer.
+    $mpdf->WriteHTML($html);
 
-    // Generating PDF File.  
-    if (strcasecmp(variable_get( 'pdf_save_option'), 'Web Browser') == 0) {
-      $mpdf -> Output($filename . '.pdf', 'I');  // Open in same browser
+    // Generating PDF File.
+    if (strcasecmp(variable_get('pdf_save_option'), 'Web Browser') == 0) {
+      // Open in same browser.
+      $mpdf->Output($filename . '.pdf', 'I');
       die;
     }
     else
-      $mpdf -> Output($filename . '.pdf', 'D');  // Dialog box for Download PDF
-  }
+      // Dialog box for Download PDF.
+      $mpdf->Output($filename . '.pdf' ,'D');
+    }
   else {
     drupal_set_message(t('mPDF library is not included. Please check your') . ' " ' . MPDF_LIB_PATH . ' " directory .' , 'error');
     return;
