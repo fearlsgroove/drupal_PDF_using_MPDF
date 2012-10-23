@@ -59,7 +59,7 @@ function pdf_using_mpdf_generate_pdf() {
 /**
  * Generate node object if alias is given, or simply load node using nid.
  *
- * @param $path
+ * @param $path string
  *   path given for a node.
  *
  * @return node
@@ -96,9 +96,9 @@ function _pdf_using_mpdf_node_generator($path) {
 /**
  * Generate the PDF file using the mPDF library.
  *
- * @param $html
+ * @param $html string
  *   contents of the template already with the node data.
- * @param $filename
+ * @param $filename string
  *   name of the PDF file to be generated.
  */
 function _pdf_using_mpdf_generator($html, $filename = NULL) {
@@ -288,11 +288,11 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
     }
     else {
       // Dialog box for Download PDF.
-      $mpdf->Output($filename . '.pdf' ,'D');
+      $mpdf->Output($filename . '.pdf', 'D');
     }
   }
   else {
-    drupal_set_message(t('mPDF library is not included. Please check your') . ' " ' . MPDF_LIB_PATH . ' " directory .' , 'error');
+    drupal_set_message(t('mPDF library is not included. Please check your') . ' " ' . MPDF_LIB_PATH . ' " directory .', 'error');
     return;
   }
 }
