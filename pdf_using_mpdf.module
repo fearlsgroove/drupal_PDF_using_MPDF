@@ -175,10 +175,10 @@ function pdf_using_mpdf_config_validate($form, $form_state) {
  * API to generate a PDF file.
  *
  * @param string $html
- * html is rendered HTML that will be converted into PDF.
+ *   html is rendered HTML that will be converted into PDF.
  *
  * @param string $pdf_filename
- * pdf_filename is Optional name of the PDF file.
+ *   pdf_filename is Optional name of the PDF file.
  *
  * @return mpdf
  *   PDF file generated using mPDF library.
