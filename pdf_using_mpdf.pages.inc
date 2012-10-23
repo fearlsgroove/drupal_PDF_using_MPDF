@@ -1,12 +1,11 @@
 <?php
 
 /**
- * @file 
- * Generate HTML of a given node
+ * @file
+ * Generate HTML of a given node.
  *
- * @return
- *   generated PDF document
- * 
+ * @return mpdf
+ *   generated PDF document.
  */
 function pdf_using_mpdf_generate_pdf() {
   global $theme;
@@ -23,21 +22,21 @@ function pdf_using_mpdf_generate_pdf() {
     $theme_path = drupal_get_path('module', 'pdf_using_mpdf');
 
     $pdf_filename = variable_get('pdf_filename', PDF_DEFAULT_FILENAME);
-    $pdf_filename = token_replace( $pdf_filename , array('node' => $node) );
-    $file = file_scan_directory( $theme_path , '/pdf.*\.tpl.php$/' ) ;
+    $pdf_filename = token_replace($pdf_filename , array('node' => $node));
+    $file = file_scan_directory($theme_path ,'/pdf.*\.tpl.php$/');
 
-    // Finding 'pdf-node--[node_id].tpl.php' - First priority
-    if ( isset ( $file[$theme_path . '/' . 'pdf--node--' . $node->nid . '.tpl.php' ] ) ) {
+    // Finding 'pdf-node--[node_id].tpl.php' - First priority.
+    if (isset ($file[$theme_path . '/' . 'pdf--node--' . $node->nid . '.tpl.php'])){
       $html = theme('pdf_node_id', array('node' => $node));
     }
 
-    // Finding 'pdf-node--[node_type].tpl.php' - Second priority
-    elseif (isset($file[$theme_path . '/' . 'pdf--node--' . $node->type . '.tpl.php' ] )) {
+    // Finding 'pdf-node--[node_type].tpl.php' - Second priority.
+    elseif (isset($file[$theme_path . '/' . 'pdf--node--' . $node->type . '.tpl.php'])){
       $html = theme('pdf_node_type', array('node' => $node));
     }
 
-    // Finding 'pdf-node.tpl.php' - Third priority
-    elseif ( isset ( $file[$theme_path . '/' . 'pdf--node.tpl.php' ] ) ) {
+    // Finding 'pdf-node.tpl.php' - Third priority.
+    elseif (isset($file[$theme_path . '/' . 'pdf--node.tpl.php'])) {
       $html = theme('pdf_node', array('node' => $node));
     }
     else {
@@ -46,28 +45,29 @@ function pdf_using_mpdf_generate_pdf() {
       $html = drupal_render($view);
     }
     return _pdf_using_mpdf_generator($html, $pdf_filename);
-  } 
-  else { 
+  }
+  else {
     drupal_get_messages('warning');
     drupal_set_message(t('Access Denied - you are not allowed to convert to PDF document. Contact site administrator.'), 'warning');
   }
 }
 
-/** Generate node object if alias is given, or simply load node using nid
+/**
+ * Generate node object if alias is given, or simply load node using nid.
  *
  * @param $path
- *   path given for a node
+ *   path given for a node.
  *
- * @return
- *   node array for a given path
- */ 
+ * @return $node
+ *   node array for a given path.
+ */
 function _pdf_using_mpdf_node_generator($path) {
   $node = array();
   $alias = drupal_get_normal_path($path);
-  // alias of the given node
+  // Alias of the given node.
   if ($alias) {
     if ($alias != $path) {
-      //if the given path is some node type
+      // If the given path is some node type.
       if (preg_match('/^node*/', $alias)) {
         $nid = preg_replace('!^node/!', '', $alias);
         $node = node_load($nid);
@@ -77,27 +77,28 @@ function _pdf_using_mpdf_node_generator($path) {
       }
     }
     elseif (ctype_digit($path)) {
-      // normal node id
+      // Normal node id.
       $node = node_load($path);
     }
   }
   if (empty($node)) {
-    //drupal_set_message(t('PDF cannot be generated for this path.'), 'error');
+    // Drupal_set_message(t('PDF cannot be generated for this path.'), 'error').
   }
   else {
     return $node;
   }
 }
 
-/** Generate the PDF file using the mPDF library
+/** 
+ * Generate the PDF file using the mPDF library
  *
  * @param $html
- *   contents of the template already with the node data
+ *   contents of the template already with the node data.
  * @param $filename
- *   name of the PDF file to be generated
- */ 
+ *   name of the PDF file to be generated.
+ */
 function _pdf_using_mpdf_generator($html, $filename = NULL) {
-  // International Paper Sizes ( width x height)
+  // International Paper Sizes ( width x height).
   $paper_size = array(
     '4A0' => array('w' => 1682, 'h' => 2378),
     '2A0' => array('w' => 1189, 'h' => 1682),
@@ -146,31 +147,28 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
 
     'Letter' => array('w' => 215.9, 'h' => 279.4),
     'Legal' => array('w' => 215.9, 'h' => 355.6),
-    'Ledger' => array('w' => 279.4, 'h' => 431.8),
-    
+    'Ledger' => array('w' => 279.4, 'h' => 431.8), 
   );
 
   $root_path = drupal_get_path('module', 'pdf_using_mpdf');
-  $page = variable_get('pdf_page_size', PDF_PAGE_SIZE); 
+  $page = variable_get('pdf_page_size', PDF_PAGE_SIZE);
   $font_size = variable_get('pdf_font_size', PDF_FONT_SIZE);
 
-  //Search for mpdf tool first
+  // Search for mpdf tool first.
   $pattern = '/^mpdf.php$/';
   $tools = array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern));
   $tools = array_merge($tools, array_keys(file_scan_directory(MPDF_LIB_PATH, $pattern)));
-  
   if (isset($tools[0])) {
     require_once $tools[0];
 
-    // creating Instance of mPDF Class Library 
+    // Creating Instance of mPDF Class Library.
     $mpdf = new mPDF('', array($paper_size[$page]['w'], $paper_size[$page]['h']), $font_size, '', 15, 15, 16, 16, 9, 9);
-
     $header_left = variable_get('pdf_header_left');
     $header_center = variable_get('pdf_header_center');
     $header_right = variable_get('pdf_header_right');
 
-    // enabling header option if available.
-    if ($header_left  != NULL || $header_center != NULL || $header_right != NULL) {
+    // Enabling header option if available.
+    if ($header_left != NULL || $header_center != NULL || $header_right != NULL) {
       $header = array(
         'odd' => array(
           'L' => array(
@@ -178,33 +176,33 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
             'font-size' => 9,
             'font-style' => 'B',
             'font-family' => 'serif',
-            'color' => 'gray'
+            'color' => 'gray',
           ),
           'C' => array(
             'content' => $header_center,
             'font-size' => 9,
             'font-style' => 'B',
             'font-family' => 'serif',
-            'color' => 'gray'
+            'color' => 'gray',
           ),
           'R' => array(
             'content' => $header_right,
             'font-size' => 9,
             'font-style' => 'B',
             'font-family' => 'serif',
-            'color' => 'gray'
+            'color' => 'gray',
           ),
           'line' => 1,
         ),
-        'even' => array()
+        'even' => array(),
       );
-      $mpdf -> SetHeader($header); 
+      $mpdf -> SetHeader($header);
     }
-  
-    $footer_left = variable_get( 'pdf_footer_left');
-    $footer_center = variable_get( 'pdf_footer_center');
-    $footer_right = variable_get( 'pdf_footer_right');
-    // enabling Footer option if available.
+
+    $footer_left = variable_get('pdf_footer_left');
+    $footer_center = variable_get('pdf_footer_center');
+    $footer_right = variable_get('pdf_footer_right');
+    // Enabling Footer option if available.
     if ($footer_left  != NULL || $footer_center != NULL || $footer_right != NULL) {
       $footer = array(
         'odd' => array(
