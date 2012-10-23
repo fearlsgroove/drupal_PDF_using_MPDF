@@ -267,7 +267,7 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
     $stylesheet = variable_get('pdf_css_file');
 
     if (isset($stylesheet) && $stylesheet != NULL) {
-      $css_file = file_scan_directory($root_path ,'/.*\.css$/');
+      $css_file = file_scan_directory($root_path, '/.*\.css$/');
       if (isset($css_file[$root_path . '/' . $stylesheet])) {
         $stylesheet = file_get_contents($root_path . '/' . $stylesheet);
         $mpdf->WriteHTML($stylesheet, 1);
@@ -286,10 +286,11 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
       $mpdf->Output($filename . '.pdf', 'I');
       die;
     }
-    else
+    else {
       // Dialog box for Download PDF.
       $mpdf->Output($filename . '.pdf' ,'D');
     }
+  }
   else {
     drupal_set_message(t('mPDF library is not included. Please check your') . ' " ' . MPDF_LIB_PATH . ' " directory .' , 'error');
     return;

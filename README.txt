@@ -5,8 +5,8 @@ PDF using mPDF
 
 DESCRIPTION/FEATURES
 --------------------
-* This module is used Conversion of HTML page to PDF using mPDF PHP Library. This module allows you 
-to generate the following pdf documents of any node:
+* This module is used Conversion of HTML page to PDF using mPDF PHP Library.
+This module allows you to generate the following pdf documents of any node:
 
   * PDF creation (at www.example.com/show_pdf/nid)
 
@@ -38,7 +38,8 @@ CONFIGURATION
   Administration > People > Permissions (admin/people/permissions)
     Under PDF using mPDF module.
     
-  Administration > Configuration > User interface > PDF using mPDF settings (admin/config/user-interface/mpdf)
+  Administration > Configuration > User interface > PDF using mPDF settings
+  (admin/config/user-interface/mpdf)
     This is where all the module-specific configuration options can be set.
 
 - To modify the template of printer friendly pages, simply edit the
@@ -46,9 +47,9 @@ pdf--node.tpl.php or the css/style.css files.
 
 - It is possible to set per-content-type and/or theme-specific templates
   which are searched for in the following order: 
-   1. pdf--node--[id].tpl.php in the module directory (supplied by the module)
-   2. pdf--node--[type].tpl.php in the module directory (supplied by the module)
-   3. pdf--node.tpl.php in the module directory (supplied by the module)
+  1. pdf--node--[id].tpl.php in the module directory (supplied by the module)
+  2. pdf--node--[type].tpl.php in the module directory (supplied by the module)
+  3. pdf--node.tpl.php in the module directory (supplied by the module)
 
 
 API
@@ -78,8 +79,9 @@ PDF TOOL
 --------
 
 The pdf_using_mpdf module requires the use of an external PDF generation tool.
-The currently supported tools are mPDF. Please note that any errors/bugs in those tools need to be reported and fixed by
-their maintainers.  DO NOT report bugs in those tools in the PDF Using mPDF module's issue queue at Drupal.org.
+The currently supported tools are mPDF. Please note that any errors/bugs in
+those tools need to be reported and fixed by their maintainers. DO NOT report
+bugs in those tools in the PDF Using mPDF module's issue queue at Drupal.org.
 
 supported paths:
   * libraries directory (sites/all/libraries/)
@@ -93,8 +95,8 @@ MPDF support:
   header and footer are supported. This module requires MPDF >= 5.9.012.
 
   1. Download mPDF from http://www.mpdf1.com/mpdf/download.
-  2. Extract the contents of the downloaded package into one of the
-  supported paths.  There is a need to rename mpdf directry to mpdf eg: 'MPDF54' to 'mpdf'
+  2. Extract the contents of the downloaded package into one of the supported
+  paths. There is a need to rename mpdf directry to mpdf eg: 'MPDF54' to 'mpdf'
   3. Grant write access to the cache and images directories to your
   webserver user.
   4. Check http://www.mpdf1.com/ for further information.
