@@ -3,7 +3,3 @@ description = HTML to PDF conversion Using mPDF.
 core = 7.x
 package = "PDF Conversion"
 configure = admin/config/user-interface/mpdf
-files[] = pdf_using_mpdf.module
-files[] = pdf_using_mpdf.admin.inc
-files[] = pdf_using_mpdf.pages.inc
-files[] = pdf_using_mpdf.install
