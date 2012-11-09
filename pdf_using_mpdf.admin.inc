@@ -188,7 +188,7 @@ function pdf_using_mpdf_config_validate($form, $form_state) {
   // Remove password, if check box is checked.
   if (isset($form_state['values']['remove_pwd'])) {
     if ($form_state['values']['remove_pwd'] == '1') {
-      variable_set('pdf_password', NULL );
+      variable_set('pdf_password', NULL);
     }
   }
   if (!(is_numeric($form_state['values']['pdf_font_size']) && $form_state['values']['pdf_font_size'] > 1)) {

@@ -21,7 +21,7 @@ module_load_include('inc', 'pdf_using_mpdf', 'pdf_using_mpdf.pages');
 function pdf_using_mpdf_help($path, $arg) {
   if ($path == 'admin/help#pdf_using_mpdf') {
 
-    $data = '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . t('This module is used Conversion of HTML page to PDF using mPDF PHP Library. This module allows you to generate the pdf documents of any node:') . '<br /><br /><strong>' . t('PDF creation (at www.example.com/show_pdf/nid)') . '</strong><br /><br /> ' . t('where nid is the node id of content to render.') . '<br /><br />' . t('By creating your own CSS file and/or the pdf--node.tpl.php files, it is possible to change the look of the output page to suit your taste. For a more fine-grained customization, it is possible to use a template file named:') . '<br /><br /><strong>' . t('Drupal 7: pdf--node--[node-type|node-id].tpl.php') . '</strong><br />' . t('located in the same module directory i.e., "pdf_using_mpdf".') . '<br />' . t('Where node-type & node-id are Drupal node\'s type (e.g. page, story, etc.) and node-id (eg: 12) respectively.') . '<br /><br /><strong>' . t('API Function : pdf_using_mpdf_api()') . '</strong><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . t('This API function is available to content developers that prefer  to generate a pdf file of custom path. The function takes two parameters, first a rendered html content and an optional second parameter, name of the pdf file. E.g:   pdf_using_mpdf_api($html) where $html is any html content.') . '<br /><br />' . t('You must install the following third-party tools to generate PDFs:') . '<br /><br />' . l(t('mPDF'), 'http://www.mpdf1.com') . '<br /><br />' . t('Please follow the instructions in the README.txt files carefully.') . '<br /><br />' . t('Developed By :') . ' ' . l(t('OSSCube'), 'http://www.osscube.com/') . '<br /><br /></p>';
+    $data = '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . t('This module is used Conversion of HTML page to PDF using mPDF PHP Library. This module allows you to generate the pdf documents of any node:') . '<br /><br /><strong>' . t('PDF creation (at www.example.com/show_pdf/nid)') . '</strong><br /><br /> ' . t('where nid is the node id of content to render.') . '<br /><br />' . t('By creating your own CSS file and/or the pdf--node.tpl.php files, it is possible to change the look of the output page to suit your taste. For a more fine-grained customization, it is possible to use a template file named:') . '<br /><br /><strong>' . t('Drupal 7: pdf--node--[node-type|node-id].tpl.php') . '</strong><br />' . t('located in the same module directory i.e., "pdf_using_mpdf".') . '<br />' . t('Where node-type & node-id are Drupal node type (e.g. page, story, etc.) and node-id (eg: 12) respectively.') . '<br /><br /><strong>' . t('API Function : pdf_using_mpdf_api()') . '</strong><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . t('This API function is available to content developers that prefer  to generate a pdf file of custom path. The function takes two parameters, first a rendered html content and an optional second parameter, name of the pdf file. E.g:   pdf_using_mpdf_api($html) where $html is any html content.') . '<br /><br />' . t('You must install the following third-party tools to generate PDFs:') . '<br /><br />' . l(t('mPDF'), 'http://www.mpdf1.com') . '<br /><br />' . t('Please follow the instructions in the README.txt files carefully.') . '<br /><br />' . t('Developed By :') . ' ' . l(t('OSSCube'), 'http://www.osscube.com/') . '<br /><br /></p>';
     return $data;
   }
 }
@@ -46,7 +46,7 @@ function pdf_using_mpdf_menu() {
     'title' => 'PDF using mPDF settings',
     'description' => 'configuration of custom mPDF setting',
     'page callback' => 'drupal_get_form',
-    'access callback' => 'admin_config_access',
+    'access callback' => 'pdf_using_mpdf_admin_config_access',
     'page arguments' => array('pdf_using_mpdf_config'),
     'weight' => -1,
     'file' => 'pdf_using_mpdf.admin.inc',
@@ -64,7 +64,7 @@ function pdf_using_mpdf_menu() {
 /**
  * Configuration settings can only be accessed by the administrator always.
  */
-function admin_config_access() {
+function pdf_using_mpdf_admin_config_access() {
   global $user;
   if ($user->uid == 0 || $user->uid != 1) {
     return FALSE;
@@ -84,8 +84,8 @@ function pdf_using_mpdf_theme() {
   $node = _pdf_using_mpdf_node_generator($arg[count($arg) - 1]);
   if (!empty($node)) {
     $theme['pdf_node'] = array(
-    'variables' => array('node' => NULL),
-    'template' => 'pdf--node',
+      'variables' => array('node' => NULL),
+      'template' => 'pdf--node',
     );
     $theme['pdf_node_type'] = array(
       'variables' => array('node' => NULL),
