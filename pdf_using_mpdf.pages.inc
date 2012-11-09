@@ -281,7 +281,7 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
     $mpdf->WriteHTML($html);
 
     // Generating PDF File.
-    if (strcasecmp(variable_get('pdf_save_option'), 'Web Browser') == 0) {
+    if (variable_get('pdf_save_option') == '0') {
       // Open in same browser.
       $mpdf->Output($filename . '.pdf', 'I');
       die;
