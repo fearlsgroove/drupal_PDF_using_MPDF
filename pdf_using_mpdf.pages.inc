@@ -297,7 +297,7 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
     }
   }
   else {
-    drupal_set_message(t('mPDF library is not included. Please check your " ' . MPDF_LIB_PATH . ' " directory or " /sites/your-domain-name/libraries/ directory " or " ' . MPDF_MODULE_PATH . ' " directory.'), 'error');
+    drupal_set_message(t('mPDF library is not included. Please check your " ') . MPDF_LIB_PATH . t(' " directory or " /sites/your-domain-name/libraries/ directory " or " ') . MPDF_MODULE_PATH . t(' " directory.'), 'error');
     return;
   }
 }
