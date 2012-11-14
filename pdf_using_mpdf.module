@@ -160,4 +160,3 @@ function pdf_using_mpdf_api($html, $pdf_filename = NULL) {
   }
   return _pdf_using_mpdf_generator($html, $pdf_filename);
 }
-/* *********************** Module End ***************************** */

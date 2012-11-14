@@ -175,7 +175,7 @@ function pdf_using_mpdf_config() {
     variable_set('mpdf_library_exist', FALSE);
     $form['pdf'] = array(
       '#type' => 'markup',
-      '#markup' => t('<p>No mPDF Library Found in"' . ' ' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . ' or ' . MPDF_MODULE_PATH . '/' . MPDF_API_FILE . '".<br />Please dowload mPDF supported PHP PDF generation tool from ' . l(t('MPDF Library.'), 'http://www.mpdf1.com/') . '</p>'),
+      '#markup' => t('<p>No mPDF Library Found in"' . ' ' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . ' or ' . MPDF_MODULE_PATH . '/' . MPDF_API_FILE . '".<p>Please dowload mPDF supported PHP PDF generation tool from ' . l(t('MPDF Library.'), 'http://www.mpdf1.com/') . '</p>'),
     );
   }
   return system_settings_form($form);
