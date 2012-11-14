@@ -24,8 +24,8 @@ function pdf_using_mpdf_config() {
     );
     $form['pdf']['radio_btn'] = array(
       '#type' => 'markup',
-      '#title' => 'MPDF library',
-      '#markup' => 'Add mPDF library to "' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . '" or "' . MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE . '".',
+      '#title' => t('MPDF library'),
+      '#markup' => t('<p>Add mPDF library to "' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . '" or "' . MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE . '".</p>'),
     );
     $form['pdf']['pdf_set_author'] = array(
       '#type' => 'textfield',
@@ -78,7 +78,7 @@ function pdf_using_mpdf_config() {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#title' => t('PDF Header Option'),
-      '#description' => t('use') . ' {PAGENO} ' . t('for page numbering or') . " ' {DATE j-m-Y} ' " . t('for current date.'),
+      '#description' => t('use {PAGENO} for page numbering or {DATE j-m-Y} for current date.'),
     );
     $form['pdf']['header']['pdf_header_left'] = array(
       '#type' => 'textfield',
@@ -136,7 +136,7 @@ function pdf_using_mpdf_config() {
     if (isset($pwd) && $pwd != NULL) {
       $form['pdf']['permission']['msg'] = array(
         '#type' => 'markup',
-        '#markup' => '<br />' . t('Password : ******** is already set.') . '<br /><br />',
+        '#markup' => t('<p>Password : ******** is already set.</p>'),
       );
       $form['pdf']['permission']['remove_pwd'] = array(
         '#type' => 'checkbox',
@@ -171,11 +171,11 @@ function pdf_using_mpdf_config() {
     );
   }
   else {
-    // Handling error, if mPDF library is not exists.
+    // Handling error, if mPDF library does not exist.
     variable_set('mpdf_library_exist', FALSE);
     $form['pdf'] = array(
       '#type' => 'markup',
-      '#markup' => '<p>No mPDF Library Found in"' . ' ' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . ' or ' . MPDF_MODULE_PATH . '/' . MPDF_API_FILE . '".<br />Please dowload mPDF supported PHP PDF generation tool from ' . l(t('MPDF Library.'), 'http://www.mpdf1.com/') . '</p>',
+      '#markup' => t('<p>No mPDF Library Found in"' . ' ' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . ' or ' . MPDF_MODULE_PATH . '/' . MPDF_API_FILE . '".<br />Please dowload mPDF supported PHP PDF generation tool from ' . l(t('MPDF Library.'), 'http://www.mpdf1.com/') . '</p>'),
     );
   }
   return system_settings_form($form);
@@ -185,14 +185,18 @@ function pdf_using_mpdf_config() {
  * Configuration form Validation check.
  */
 function pdf_using_mpdf_config_validate($form, $form_state) {
+  $file_lib = file_scan_directory(MPDF_LIB_PATH, '/.*\.php$/');
+  $file_module = file_scan_directory(MPDF_MODULE_PATH . '/mpdf', '/.*\.php$/');
+
   // Remove password, if check box is checked.
-  if (isset($form_state['values']['remove_pwd'])) {
-    if ($form_state['values']['remove_pwd'] == '1') {
-      variable_set('pdf_password', NULL);
+  if (isset($file_lib[MPDF_LIB_PATH . '/' . MPDF_API_FILE]) || isset($file_module[MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE])) {
+    if (isset($form_state['values']['remove_pwd'])) {
+      if ($form_state['values']['remove_pwd'] == '1') {
+        variable_set('pdf_password', NULL);
+      }
+    }
+    if (!(is_numeric($form_state['values']['pdf_font_size']) && $form_state['values']['pdf_font_size'] > 1)) {
+      form_set_error('font_size', t('Font size should be numeric and greater than 1.'));
     }
   }
-  if (!(is_numeric($form_state['values']['pdf_font_size']) && $form_state['values']['pdf_font_size'] > 1)) {
-    form_set_error('font_size', t('Font size should be numeric and greater than 1.'));
-  }
 }
-/* ********************* End of admin.inc  ************************ */

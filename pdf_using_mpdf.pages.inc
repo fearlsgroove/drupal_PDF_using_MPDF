@@ -160,8 +160,13 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
 
   // Search for mpdf tool first.
   $pattern = '/^mpdf.php$/';
-  $tools = array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern));
-  $tools = array_merge($tools, array_keys(file_scan_directory(MPDF_LIB_PATH, $pattern)));
+
+  //Libraries module used to detect mPDF library in case of a multisite installation.
+  $tools = array_keys(file_scan_directory(libraries_get_path('mpdf'), $pattern));
+
+  //mPDF library if not in /sites/all/libraries or /sites/<domain-name>/libraries, looks for it in the module directory itself.
+  $tools = array_merge($tools, array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern)));
+
   if (isset($tools[0])) {
     require_once $tools[0];
 
@@ -292,8 +297,7 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
     }
   }
   else {
-    drupal_set_message(t('mPDF library is not included. Please check your') . ' " ' . MPDF_LIB_PATH . ' " directory .', 'error');
+//    drupal_set_message(t('mPDF library is not included. Please check your " ' . MPDF_LIB_PATH . ' " directory or " /sites/your-domain-name/libraries/ directory " or " ' . MPDF_MODULE_PATH . ' " directory.'), 'error');
     return;
   }
 }
-/* ********************* End of page.inc  ************************ */
