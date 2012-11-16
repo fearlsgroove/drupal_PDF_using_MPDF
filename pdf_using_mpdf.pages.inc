@@ -161,10 +161,10 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
   // Search for mpdf tool first.
   $pattern = '/^mpdf.php$/';
 
-  //Libraries module used to detect mPDF library in case of a multisite installation.
+  // Libraries module to detect mPDF library in case of multisite installation.
   $tools = array_keys(file_scan_directory(libraries_get_path('mpdf'), $pattern));
 
-  //mPDF library if not in /sites/all/libraries or /sites/<domain-name>/libraries, looks for it in the module directory itself.
+  // mPDF library looked for in the module directory itself.
   $tools = array_merge($tools, array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern)));
 
   if (isset($tools[0])) {

@@ -92,7 +92,7 @@ MPDF support:
 -------------
   MPDF's support for CSS is considerably worse than the other tools.
   Unicode is supported (use of Unicode fonts result in HUGE files).  Page
-  header and footer are supported. This module requires MPDF >= 5.9.012.
+  header and footer are supported. This module requires MPDF >= 5.4 .
 
   1. Download mPDF from http://www.mpdf1.com/mpdf/download.
   2. Extract the contents of the downloaded package into one of the supported

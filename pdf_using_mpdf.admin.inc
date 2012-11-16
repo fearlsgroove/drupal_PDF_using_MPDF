@@ -14,6 +14,7 @@
 function pdf_using_mpdf_config() {
   $file_lib = file_scan_directory(MPDF_LIB_PATH, '/.*\.php$/');
   $file_module = file_scan_directory(MPDF_MODULE_PATH . '/mpdf', '/.*\.php$/');
+  $message = '<p>Add mPDF library to "' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . '" or "' . MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE . '".</p>';
   if (isset($file_lib[MPDF_LIB_PATH . '/' . MPDF_API_FILE]) || isset($file_module[MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE])) {
     variable_set('mpdf_library_exist', TRUE);
     $form['pdf'] = array(
@@ -25,7 +26,7 @@ function pdf_using_mpdf_config() {
     $form['pdf']['radio_btn'] = array(
       '#type' => 'markup',
       '#title' => t('MPDF library'),
-      '#markup' => t('<p>Add mPDF library to "' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . '" or "' . MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE . '".</p>'),
+      '#markup' => t($message),
     );
     $form['pdf']['pdf_set_author'] = array(
       '#type' => 'textfield',
@@ -169,16 +170,18 @@ function pdf_using_mpdf_config() {
       '#description' => t('If no name given to PDF file, Default filename : "') . PDF_DEFAULT_FILENAME . t('" will be used.'),
       '#default_value' => isset($filename) && $filename != NULL ? $filename : PDF_DEFAULT_FILENAME,
     );
+    return system_settings_form($form);
   }
   else {
+    $message = '<p>No mPDF Library Found in"' . ' ' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . ' or ' . MPDF_MODULE_PATH . '/' . MPDF_API_FILE . '".<p>Please dowload mPDF supported PHP PDF generation tool from ' . l(t('MPDF Library.'), 'http://www.mpdf1.com/') . '</p>';
     // Handling error, if mPDF library does not exist.
     variable_set('mpdf_library_exist', FALSE);
     $form['pdf'] = array(
       '#type' => 'markup',
-      '#markup' => t('<p>No mPDF Library Found in"' . ' ' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . ' or ' . MPDF_MODULE_PATH . '/' . MPDF_API_FILE . '".<p>Please dowload mPDF supported PHP PDF generation tool from ' . l(t('MPDF Library.'), 'http://www.mpdf1.com/') . '</p>'),
+      '#markup' => t($message),
     );
   }
-  return system_settings_form($form);
+  return $form;
 }
 
 /**
