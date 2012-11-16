@@ -14,7 +14,7 @@
 function pdf_using_mpdf_config() {
   $file_lib = file_scan_directory(MPDF_LIB_PATH, '/.*\.php$/');
   $file_module = file_scan_directory(MPDF_MODULE_PATH . '/mpdf', '/.*\.php$/');
-  $message = '<p>Add mPDF library to "' . MPDF_LIB_PATH . '/' . MPDF_API_FILE . '" or "' . MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE . '".</p>';
+
   if (isset($file_lib[MPDF_LIB_PATH . '/' . MPDF_API_FILE]) || isset($file_module[MPDF_MODULE_PATH . '/mpdf/' . MPDF_API_FILE])) {
     variable_set('mpdf_library_exist', TRUE);
     $form['pdf'] = array(
@@ -22,11 +22,6 @@ function pdf_using_mpdf_config() {
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#title' => t('PDF Tool Option'),
-    );
-    $form['pdf']['radio_btn'] = array(
-      '#type' => 'markup',
-      '#title' => t('MPDF library'),
-      '#markup' => t($message),
     );
     $form['pdf']['pdf_set_author'] = array(
       '#type' => 'textfield',

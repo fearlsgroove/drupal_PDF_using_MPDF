@@ -21,10 +21,19 @@ Drupal 7.0
 INSTALLATION
 ------------
 
+pdf_using_mpdf module is dependent on the Libraries module, you need to
+have Libraries module enabled prior to using pdf_using_mpdf module.
+
 Decompress the pdf_using_mpdf.tar.gz file into your Drupal modules
 directory (usually sites/all/modules).
 
 Enable the PDF Using mPDF module: Administration > Modules (admin/modules)
+
+Create a directory (if not exists) named 'libraries' in /sites/all/ or 
+/sites/your-domain-name/ and download mPDF PHP library in this directory.
+
+You can also download mPDF library in the module directory itself without 
+creating any 'libraries' directory.
 
 
 CONFIGURATION
