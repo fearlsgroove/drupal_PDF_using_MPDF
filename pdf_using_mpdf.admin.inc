@@ -100,7 +100,7 @@ function pdf_using_mpdf_config() {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#title' => t('PDF Footer Option'),
-      '#description' => t('use') . ' {PAGENO} ' . t("for page numbering or") . " ' {DATE j-m-Y} ' " . t('for current date.'),
+      '#description' => t('use {PAGENO} for page numbering or {DATE j-m-Y} for current date.'),
     );
     $form['pdf']['footer']['pdf_footer_left'] = array(
       '#type' => 'textfield',
@@ -155,7 +155,7 @@ function pdf_using_mpdf_config() {
     );
     $form['pdf']['style']['pdf_css_file'] = array(
       '#type' => 'textfield',
-      '#description' => t('Enter your name of css file, Eg: style.css. Place all stylesheets in same module directory, i.e. "') . drupal_get_path('module', 'pdf_using_mpdf') . '/".' . t('If the file is in a folder in module directory, enter the name with  path to that folder, e.g: "css_folder/style.css" .'),
+      '#description' => t('Enter your name of css file, Example: style.css. Place all stylesheets in the same module directory, i.e. "!module_path/". If the file is in a folder in module directory, enter the name with  path to that folder, for example : "css_folder/style.css".', array('!module_path' => drupal_get_path('module', 'pdf_using_mpdf'))),
       '#default_value' => variable_get('pdf_css_file'),
     );
     $filename = variable_get('pdf_filename');
