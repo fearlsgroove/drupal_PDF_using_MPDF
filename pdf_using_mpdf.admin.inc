@@ -172,12 +172,11 @@ function pdf_using_mpdf_config() {
     variable_set('mpdf_library_exist', FALSE);
     $form['pdf'] = array(
       '#type' => 'markup',
-      '#markup' => t('<p>No mPDF Library Found in "!default_lib_path/!default_api_file" or "!default_module_path/!default_mpdf_api_file".<p>Please download PHP mPDF PDF generation tool from ' . l('!default_link', 'http://www.mpdf1.com/') . '.</p>', array(
+      '#markup' => t('<p>No mPDF Library Found in "!default_lib_path/!default_api_file" or "!default_module_path/!default_mpdf_api_file".<p>Please download PHP mPDF PDF generation tool from <a href="http://www.mpdf1.com/">mPDF1.com</a> </p>', array(
           '!default_lib_path' => MPDF_LIB_PATH,
           '!default_api_file' => MPDF_API_FILE,
           '!default_module_path' => MPDF_MODULE_PATH,
           '!default_mpdf_api_file' => MPDF_API_FILE,
-          '!default_link' => t('MPDF Library'),
         )
       ),
     );
