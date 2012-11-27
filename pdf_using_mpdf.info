@@ -2,6 +2,5 @@ name = PDF using mPDF
 description = HTML to PDF conversion Using mPDF.
 core = 7.x
 package = "PDF Conversion"
-version = 7.x.1.0
 dependencies[] = libraries
 configure = admin/config/user-interface/mpdf

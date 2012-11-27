@@ -5,25 +5,19 @@
  * Prints PDF for a given html node view.
  */
 
-define('MPDF_LIB_PATH', 'sites/all/libraries/mpdf');
-define('MPDF_MODULE_PATH', drupal_get_path('module', 'pdf_using_mpdf'));
-define('MPDF_API_FILE', 'mpdf.php');
-define('PDF_DEFAULT_FILENAME', '[site:name] - [node:title] - [node:changed:custom:Y-m-d]');
-define('PDF_FONT_SIZE', 10);
-define('PDF_PAGE_SIZE', 'A4');
-
-// Loading 'pdf_using_mpdf.pages.inc' file.
-module_load_include('inc', 'pdf_using_mpdf', 'pdf_using_mpdf.pages');
+define('PDF_USING_MPDF_MPDF_LIB_PATH', 'sites/all/libraries/mpdf');
+define('PDF_USING_MPDF_MPDF_MODULE_PATH', drupal_get_path('module', 'pdf_using_mpdf'));
+define('PDF_USING_MPDF_MPDF_API_FILE', 'mpdf.php');
+define('PDF_USING_MPDF_PDF_DEFAULT_FILENAME', '[site:name] - [node:title] - [node:changed:custom:Y-m-d]');
+define('pdf_using_mpdf_pdf_font_size', 10);
+define('pdf_using_mpdf_pdf_page_size', 'A4');
 
 /**
  * Implements hook_help().
  */
 function pdf_using_mpdf_help($path, $arg) {
   if ($path == 'admin/help#pdf_using_mpdf') {
-    $html = '<p>' . t('!default_help', array(
-      '!default_help' => 'This module is used for Conversion of an HTML page to PDF using mPDF PHP Library. This module allows you to generate the pdf documents of any node:<p><strong> PDF creation (www.example.com/show_pdf/nid) </strong></p><p> where nid is the node id of a particular node to render. </p> By creating your own CSS file and/or the pdf--node.tpl.php files, it is possible to change the look of the output page to suit your taste. For a more fine-grained customization, it is possible to use a template file named: <p><strong> Drupal 7: pdf--node--[node-type|node-id].tpl.php </strong></p><p> located in the same module directory i.e., "pdf_using_mpdf". </p><p> Where node-type and node-id are Drupal node type (for example page, story, etc.) and node id (for example 10) respectively. </p><p><strong> API Function : pdf_using_mpdf_api() </strong></p> This API function is available to content developers that prefer  to generate a pdf file of custom path. The function takes two parameters, first a rendered html content and an optional second parameter, name of the pdf file, for example   pdf_using_mpdf_api($html) where $html is any html content. <p> You must install the following third-party tools to generate PDFs: </p><p> ' . l(t("mPDF"), "http://www.mpdf1.com") . '</p><p> Please follow the instructions in the README.txt files carefully. </p><p> Developed By :' . l(t('OSSCube'), 'http://www.osscube.com/') . '.</p>',
-      )
-    ) . '</p>';
+    $html = '<p>' . t('This module is used for Conversion of an HTML page to PDF using mPDF PHP Library. This module allows you to generate the pdf documents of any node:<p><strong> PDF creation (www.example.com/show_pdf/nid) </strong></p><p> where nid is the node id of a particular node to render. </p> By creating your own CSS file and/or the pdf--node.tpl.php files, it is possible to change the look of the output page to suit your taste. For a more fine-grained customization, it is possible to use a template file named: <p><strong> Drupal 7: pdf--node--[node-type|node-id].tpl.php </strong></p><p> located in the same module directory i.e., "pdf_using_mpdf". </p><p> Where node-type and node-id are Drupal node type (for example page, story, etc.) and node id (for example 10) respectively. </p><p><strong> API Function : pdf_using_mpdf_api() </strong></p> This API function is available to content developers that prefer  to generate a pdf file of custom path. The function takes two parameters, first a rendered html content and an optional second parameter, name of the pdf file, for example   pdf_using_mpdf_api($html) where $html is any html content. <p> You must install the following third-party tools to generate PDFs: </p><p> ' . l(t("mPDF"), "http://www.mpdf1.com") . '</p><p> Please follow the instructions in the README.txt files carefully. </p><p> Developed By :' . l(t('OSSCube'), 'http://www.osscube.com/') . '.</p>') . '</p>';
     return $html;
   }
 }
@@ -44,6 +38,9 @@ function pdf_using_mpdf_permission() {
  * Implements hook_menu().
  */
 function pdf_using_mpdf_menu() {
+  // Loading 'pdf_using_mpdf.pages.inc' file.
+  module_load_include('inc', 'pdf_using_mpdf', 'pdf_using_mpdf.pages');
+
   $items['admin/config/user-interface/mpdf'] = array(
     'title' => 'PDF using mPDF settings',
     'description' => 'configuration of custom mPDF setting',
@@ -92,6 +89,9 @@ function pdf_using_mpdf_admin_config_access() {
  * Implements hook_theme().
  */
 function pdf_using_mpdf_theme() {
+  // Loading 'pdf_using_mpdf.pages.inc' file.
+  module_load_include('inc', 'pdf_using_mpdf', 'pdf_using_mpdf.pages');
+
   $theme = array();
   // For node type only.
   $arg = arg();
@@ -133,16 +133,16 @@ function pdf_using_mpdf_node_view_alter(&$build) {
  * @param string $html
  *   html is rendered HTML that will be converted into PDF.
  *
- * @param string $pdf_filename
- *   pdf_filename is Optional name of the PDF file.
+ * @param string $pdf_using_mpdf_pdf_filename
+ *   pdf_using_mpdf_pdf_filename is Optional name of the PDF file.
  *
  * @return mpdf
  *   PDF file generated using mPDF library.
  */
-function pdf_using_mpdf_api($html, $pdf_filename = NULL) {
-  if ($pdf_filename === NULL) {
-    $filename = explode(variable_get('pdf_filename', 'PDF_DEFAULT_FILENAME'), '[site:name]');
-    $pdf_filename = token_replace($filename[0]);
+function pdf_using_mpdf_api($html, $pdf_using_mpdf_pdf_filename = NULL) {
+  if ($pdf_using_mpdf_pdf_filename === NULL) {
+    $filename = explode(variable_get('pdf_using_mpdf_pdf_filename', 'PDF_USING_MPDF_PDF_DEFAULT_FILENAME'), '[site:name]');
+    $pdf_using_mpdf_pdf_filename = token_replace($filename[0]);
   }
-  return _pdf_using_mpdf_generator($html, $pdf_filename);
+  return _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename);
 }
