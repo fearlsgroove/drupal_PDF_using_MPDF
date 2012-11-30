@@ -20,7 +20,7 @@ function pdf_using_mpdf_help($path, $arg) {
     $html = '<p>' . t('This module is used for Conversion of an HTML page to PDF using mPDF PHP Library. This module allows you to generate the pdf documents of any node:<p><strong> PDF creation (www.example.com/show_pdf/nid) </strong></p><p> where nid is the node id of a particular node to render. </p> By creating your own CSS file and/or the pdf--node.tpl.php files, it is possible to change the look of the output page to suit your taste. For a more fine-grained customization, it is possible to use a template file named: <p><strong> Drupal 7: pdf--node--[node-type|node-id].tpl.php </strong></p><p> located in the same module directory i.e., "pdf_using_mpdf". </p><p> Where node-type and node-id are Drupal node type (for example page, story, etc.) and node id (for example 10) respectively. </p><p><strong> API Function : pdf_using_mpdf_api() </strong></p> This API function is available to content developers that prefer  to generate a pdf file of custom path. The function takes two parameters, first a rendered html content and an optional second parameter, name of the pdf file, for example   pdf_using_mpdf_api($html) where $html is any html content. <p> You must install the following third-party tools to generate PDFs: </p><p> !default_link</p><p> Please follow the instructions in the README.txt files carefully. </p><p> Developed By : !osscube_link', array(
       '!default_link' => l(t("mPDF"), "http://www.mpdf1.com"),
       '!osscube_link' => l(t('OSSCube'), 'http://www.osscube.com/'),
-    ) . '.</p>') . '</p>';
+    )) . '</p>';
     return $html;
   }
 }
