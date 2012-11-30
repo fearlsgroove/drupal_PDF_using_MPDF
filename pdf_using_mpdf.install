@@ -10,8 +10,8 @@
  */
 function pdf_using_mpdf_uninstall() {
   variable_del('pdf_using_mpdf_mpdf_library_exist');
-  variable_del('pdf_using_mpdf_pdf_page_size');
-  variable_del('pdf_using_mpdf_pdf_font_size');
+  variable_del('pdf_using_mpdf_pdf_page_size_page');
+  variable_del('pdf_using_mpdf_pdf_font_size_font');
   variable_del('pdf_using_mpdf_pdf_filename');
   variable_del('pdf_using_mpdf_pdf_header_left');
   variable_del('pdf_using_mpdf_pdf_header_center');
