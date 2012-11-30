@@ -9,8 +9,8 @@ define('PDF_USING_MPDF_MPDF_LIB_PATH', 'sites/all/libraries/mpdf');
 define('PDF_USING_MPDF_MPDF_MODULE_PATH', drupal_get_path('module', 'pdf_using_mpdf'));
 define('PDF_USING_MPDF_MPDF_API_FILE', 'mpdf.php');
 define('PDF_USING_MPDF_PDF_DEFAULT_FILENAME', '[site:name] - [node:title] - [node:changed:custom:Y-m-d]');
-define('pdf_using_mpdf_pdf_font_size_font', 10);
-define('pdf_using_mpdf_pdf_page_size_page', 'A4');
+define('PDF_USING_MPDF_PDF_FONT_SIZE', 10);
+define('PDF_USING_MPDF_PDF_PAGE_SIZE', 'A4');
 
 /**
  * Implements hook_help().

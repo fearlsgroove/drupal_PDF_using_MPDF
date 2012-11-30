@@ -155,8 +155,8 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
   );
 
   $root_path = drupal_get_path('module', 'pdf_using_mpdf');
-  $page = variable_get('pdf_using_mpdf_pdf_page_size_page', pdf_using_mpdf_pdf_page_size_page);
-  $font_size = variable_get('pdf_using_mpdf_pdf_font_size_font', pdf_using_mpdf_pdf_font_size_font);
+  $page = variable_get('PDF_USING_MPDF_PDF_PAGE_SIZE', PDF_USING_MPDF_PDF_PAGE_SIZE);
+  $font_size = variable_get('PDF_USING_MPDF_PDF_FONT_SIZE', PDF_USING_MPDF_PDF_FONT_SIZE);
 
   // Search for mpdf tool first.
   $pattern = '/^mpdf.php$/';

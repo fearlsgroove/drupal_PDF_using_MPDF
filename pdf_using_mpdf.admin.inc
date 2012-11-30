@@ -43,7 +43,7 @@ function pdf_using_mpdf_config() {
       '#options' => array(t('Web Browser'), t('Save Dialog Box')),
       '#default_value' => (variable_get('pdf_using_mpdf_pdf_using_mpdf_pdf_save_option') == '0') ? 0 : 1,
     );
-    $form['pdf']['pdf_using_mpdf_pdf_page_size_page'] = array(
+    $form['pdf']['PDF_USING_MPDF_PDF_PAGE_SIZE'] = array(
       '#type' => 'select',
       '#title' => t('Page Size'),
       '#options' => array(
@@ -54,13 +54,13 @@ function pdf_using_mpdf_config() {
         'C7' => 'C7', 'C8' => 'C8', 'C9' => 'C9', 'C10' => 'C10', 'RA0' => 'RA0', 'RA1' => 'RA1', 'RA2' => 'RA2',
         'SRA0' => 'SRA0', 'SRA1' => 'SRA1', 'SRA2' => 'SRA2', 'LETTER' => 'Letter', 'LEGAL' => 'Legal',
       ),
-      '#default_value' => variable_get('pdf_using_mpdf_pdf_page_size_page', pdf_using_mpdf_pdf_page_size_page),
+      '#default_value' => variable_get('PDF_USING_MPDF_PDF_PAGE_SIZE', PDF_USING_MPDF_PDF_PAGE_SIZE),
     );
-    $form['pdf']['pdf_using_mpdf_pdf_font_size_font'] = array(
+    $form['pdf']['PDF_USING_MPDF_PDF_FONT_SIZE'] = array(
       '#type' => 'textfield',
       '#size' => 5,
       '#title' => t('Font Size'),
-      '#default_value' => variable_get('pdf_using_mpdf_pdf_font_size_font', pdf_using_mpdf_pdf_font_size_font),
+      '#default_value' => variable_get('PDF_USING_MPDF_PDF_FONT_SIZE', PDF_USING_MPDF_PDF_FONT_SIZE),
     );
     $form['pdf']['pdf_using_mpdf_pdf_watermark_text'] = array(
       '#type' => 'textfield',
@@ -198,7 +198,7 @@ function pdf_using_mpdf_config_validate($form, $form_state) {
         variable_set('pdf_using_mpdf_pdf_password', NULL);
       }
     }
-    if (!(is_numeric($form_state['values']['pdf_using_mpdf_pdf_font_size_font']) && $form_state['values']['pdf_using_mpdf_pdf_font_size_font'] > 1)) {
+    if (!(is_numeric($form_state['values']['PDF_USING_MPDF_PDF_FONT_SIZE']) && $form_state['values']['PDF_USING_MPDF_PDF_FONT_SIZE'] > 1)) {
       form_set_error('font_size', t('Font size should be numeric and greater than 1.'));
     }
   }
