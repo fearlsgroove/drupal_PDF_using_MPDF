@@ -8,7 +8,7 @@ DESCRIPTION/FEATURES
 * This module is used Conversion of HTML page to PDF using mPDF PHP Library.
 This module allows you to generate the following pdf documents of any node:
 
-  * PDF creation (at www.example.com/show_pdf/nid)
+  * PDF creation (at www.example.com/node/nid/pdf)
 
   where nid is the node id of content to render.
 
@@ -51,14 +51,14 @@ CONFIGURATION
   (admin/config/user-interface/mpdf)
     This is where all the module-specific configuration options can be set.
 
-- To modify the template of printer friendly pages, simply edit the
-pdf--node.tpl.php or the css/style.css files.
+- To create your own template pages, simply edit the node.tpl.php or
+the css/style.css files.
 
 - It is possible to set per-content-type and/or theme-specific templates
   which are searched for in the following order: 
-  1. pdf--node--[id].tpl.php in the module directory (supplied by the module)
-  2. pdf--node--[type].tpl.php in the module directory (supplied by the module)
-  3. pdf--node.tpl.php in the module directory (supplied by the module)
+  1. node--[id].tpl.php in the module directory (supplied by the module)
+  2. node--[type].tpl.php in the module directory (supplied by the module)
+  3. node.tpl.php in the module directory (supplied by the module)
 
 
 API

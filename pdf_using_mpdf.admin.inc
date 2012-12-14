@@ -37,11 +37,11 @@ function pdf_using_mpdf_config() {
       '#default_value' => variable_get('pdf_using_mpdf_pdf_set_subject'),
       '#description' => t('Set Subject of PDF. If not required, leave blank.'),
     );
-    $form['pdf']['pdf_using_mpdf_pdf_using_mpdf_pdf_save_option'] = array(
+    $form['pdf']['pdf_using_mpdf_pdf_save_option'] = array(
       '#type' => 'radios',
       '#title' => t('Open PDF File in'),
       '#options' => array(t('Web Browser'), t('Save Dialog Box')),
-      '#default_value' => (variable_get('pdf_using_mpdf_pdf_using_mpdf_pdf_save_option') == '0') ? 0 : 1,
+      '#default_value' => (variable_get('pdf_using_mpdf_pdf_save_option') == '0') ? 0 : 1,
     );
     $form['pdf']['PDF_USING_MPDF_PDF_PAGE_SIZE'] = array(
       '#type' => 'select',
@@ -82,11 +82,11 @@ function pdf_using_mpdf_config() {
       '#description' => t('if not required, leave blank.'),
       '#default_value' => variable_get('pdf_using_mpdf_pdf_header_left'),
     );
-    $form['pdf']['header']['pdf_header_center'] = array(
+    $form['pdf']['header']['pdf_using_mpdf_pdf_header_center'] = array(
       '#type' => 'textfield',
       '#title' => t('Center content'),
       '#description' => t('if not required, leave blank.'),
-      '#default_value' => variable_get('pdf_header_center'),
+      '#default_value' => variable_get('pdf_using_mpdf_pdf_header_center'),
     );
     $form['pdf']['header']['pdf_using_mpdf_pdf_header_right'] = array(
       '#type' => 'textfield',

@@ -9,21 +9,6 @@
  * Implements hook_uninstall().
  */
 function pdf_using_mpdf_uninstall() {
-  variable_del('pdf_using_mpdf_mpdf_library_exist');
-  variable_del('PDF_USING_MPDF_PDF_PAGE_SIZE');
-  variable_del('PDF_USING_MPDF_PDF_FONT_SIZE');
-  variable_del('pdf_using_mpdf_pdf_filename');
-  variable_del('pdf_using_mpdf_pdf_header_left');
-  variable_del('pdf_using_mpdf_pdf_header_center');
-  variable_del('pdf_using_mpdf_pdf_header_right');
-  variable_del('pdf_using_mpdf_pdf_footer_left');
-  variable_del('pdf_using_mpdf_pdf_footer_center');
-  variable_del('pdf_using_mpdf_pdf_footer_right');
-  variable_del('pdf_using_mpdf_pdf_save_option');
-  variable_del('pdf_using_mpdf_pdf_password');
-  variable_del('pdf_using_mpdf_pdf_watermark_text');
-  variable_del('pdf_using_mpdf_pdf_css_file');
-  variable_del('pdf_using_mpdf_pdf_save_option');
-  variable_del('pdf_using_mpdf_pdf_set_author');
-  variable_del('pdf_using_mpdf_pdf_set_subject');
+  // Removing all custom varible.
+  db_query("DELETE FROM {variable} WHERE name LIKE 'pdf_using_mpdf_%'");
 }
