@@ -8,11 +8,16 @@
 /**
  * Generate HTML of a given node.
  *
- * @return mpdf
- *   generated PDF document.
+ * @return bool
+ *   TRUE if PDF is successfully generated and FALSE if it isn't.
  */
 function pdf_using_mpdf_generate_pdf($node) {
-  global $theme;
+
+  if (!node_access('view', $node)) {
+    drupal_set_message(t('You are not authorized to generate PDF for this page.'), 'warning');
+    drupal_goto(urlencode('node') . '/' . $node->nid);
+    return;
+  }
 
   if (empty($node)) {
     drupal_get_messages('error');
@@ -20,9 +25,6 @@ function pdf_using_mpdf_generate_pdf($node) {
     return;
   }
   else {
-    $theme_path = drupal_get_path('module', 'pdf_using_mpdf');
-    $node = node_load($node->nid);
-
     $pdf_using_mpdf_pdf_filename = variable_get('pdf_using_mpdf_pdf_filename', PDF_USING_MPDF_PDF_DEFAULT_FILENAME);
     $pdf_using_mpdf_pdf_filename = token_replace($pdf_using_mpdf_pdf_filename, array('node' => $node));
 
@@ -30,6 +32,6 @@ function pdf_using_mpdf_generate_pdf($node) {
     $view['links']['node']['#links'] = array();
     $html = drupal_render($view);
 
-    return _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename);
+    _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename);
   }
 }
