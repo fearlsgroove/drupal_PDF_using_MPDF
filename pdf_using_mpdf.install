@@ -19,7 +19,7 @@ function pdf_using_mpdf_uninstall() {
 function pdf_using_mpdf_requirements($phase) {
   $requirements = array();
 
-  // Ensure translations do not break at install time
+  // Ensure translations do not break at install time.
   $t = get_t();
 
   // Search for mpdf tool first.

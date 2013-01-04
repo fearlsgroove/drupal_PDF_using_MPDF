@@ -24,7 +24,7 @@ function pdf_using_mpdf_generate_pdf($node) {
   }
 
   // Checking mPDF library existence.
-  if (pdf_using_mpdf_library_exist() == TRUE ) {
+  if (pdf_using_mpdf_library_exist() == TRUE) {
     $pdf_using_mpdf_pdf_filename = variable_get('pdf_using_mpdf_pdf_filename', PDF_USING_MPDF_PDF_DEFAULT_FILENAME);
     $pdf_using_mpdf_pdf_filename = token_replace($pdf_using_mpdf_pdf_filename, array('node' => $node));
 

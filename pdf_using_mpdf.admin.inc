@@ -12,7 +12,7 @@
  * Admin configure form control on page.
  */
 function pdf_using_mpdf_config() {
-  if (pdf_using_mpdf_library_exist() == TRUE ) {
+  if (pdf_using_mpdf_library_exist() == TRUE) {
     $form['pdf'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
@@ -165,7 +165,6 @@ function pdf_using_mpdf_config() {
   }
   else {
     // Handling error, if mPDF library does not exist.
-
     $form['pdf'] = array(
       '#type' => 'markup',
       '#markup' => t('<p>No mPDF Library Found in "sites/all/libraries" or "!default_module_path".<p>Please download PHP mPDF PDF generation tool from <a href="http://www.mpdf1.com/">mPDF1.com</a> </p>', array(
@@ -183,7 +182,7 @@ function pdf_using_mpdf_config() {
 function pdf_using_mpdf_config_validate($form, $form_state) {
   // Checking mPDF library existence.
 
-  if (pdf_using_mpdf_library_exist() == TRUE ) {
+  if (pdf_using_mpdf_library_exist() == TRUE) {
     if (isset($form_state['values']['remove_pwd'])) {
       if ($form_state['values']['remove_pwd'] == '1') {
         variable_set('pdf_using_mpdf_pdf_password', NULL);
