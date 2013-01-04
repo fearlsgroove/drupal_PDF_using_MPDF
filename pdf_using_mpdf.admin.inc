@@ -12,11 +12,7 @@
  * Admin configure form control on page.
  */
 function pdf_using_mpdf_config() {
-  $file_lib = file_scan_directory(PDF_USING_MPDF_MPDF_LIB_PATH, '/.*\.php$/');
-  $file_module = file_scan_directory(PDF_USING_MPDF_MPDF_MODULE_PATH . '/mpdf', '/.*\.php$/');
-
-  if (isset($file_lib[PDF_USING_MPDF_MPDF_LIB_PATH . '/' . PDF_USING_MPDF_MPDF_API_FILE]) || isset($file_module[PDF_USING_MPDF_MPDF_MODULE_PATH . '/mpdf/' . PDF_USING_MPDF_MPDF_API_FILE])) {
-    variable_set('pdf_using_mpdf_mpdf_library_exist', TRUE);
+  if (pdf_using_mpdf_library_exist() == TRUE ) {
     $form['pdf'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
@@ -169,14 +165,11 @@ function pdf_using_mpdf_config() {
   }
   else {
     // Handling error, if mPDF library does not exist.
-    variable_set('pdf_using_mpdf_mpdf_library_exist', FALSE);
+
     $form['pdf'] = array(
       '#type' => 'markup',
-      '#markup' => t('<p>No mPDF Library Found in "!default_lib_path/!default_api_file" or "!default_module_path/!default_mpdf_api_file".<p>Please download PHP mPDF PDF generation tool from <a href="http://www.mpdf1.com/">mPDF1.com</a> </p>', array(
-          '!default_lib_path' => PDF_USING_MPDF_MPDF_LIB_PATH,
-          '!default_api_file' => PDF_USING_MPDF_MPDF_API_FILE,
-          '!default_module_path' => PDF_USING_MPDF_MPDF_MODULE_PATH,
-          '!default_mpdf_api_file' => PDF_USING_MPDF_MPDF_API_FILE,
+      '#markup' => t('<p>No mPDF Library Found in "sites/all/libraries" or "!default_module_path".<p>Please download PHP mPDF PDF generation tool from <a href="http://www.mpdf1.com/">mPDF1.com</a> </p>', array(
+          '!default_module_path' => drupal_get_path('module', 'pdf_using_mpdf'),
         )
       ),
     );
@@ -188,11 +181,9 @@ function pdf_using_mpdf_config() {
  * Configuration form Validation check.
  */
 function pdf_using_mpdf_config_validate($form, $form_state) {
-  $file_lib = file_scan_directory(PDF_USING_MPDF_MPDF_LIB_PATH, '/.*\.php$/');
-  $file_module = file_scan_directory(PDF_USING_MPDF_MPDF_MODULE_PATH . '/mpdf', '/.*\.php$/');
+  // Checking mPDF library existence.
 
-  // Remove password, if check box is checked.
-  if (isset($file_lib[PDF_USING_MPDF_MPDF_LIB_PATH . '/' . PDF_USING_MPDF_MPDF_API_FILE]) || isset($file_module[PDF_USING_MPDF_MPDF_MODULE_PATH . '/mpdf/' . PDF_USING_MPDF_MPDF_API_FILE])) {
+  if (pdf_using_mpdf_library_exist() == TRUE ) {
     if (isset($form_state['values']['remove_pwd'])) {
       if ($form_state['values']['remove_pwd'] == '1') {
         variable_set('pdf_using_mpdf_pdf_password', NULL);

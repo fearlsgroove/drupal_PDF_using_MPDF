@@ -25,7 +25,7 @@ pdf_using_mpdf module is dependent on the Libraries module, you need to
 have Libraries module enabled prior to using pdf_using_mpdf module.
 
 Decompress the pdf_using_mpdf.tar.gz file into your Drupal modules
-directory (usually sites/all/modules).
+directory (usually sites/all/modules) and rename the directory to "mpdf".
 
 Enable the PDF Using mPDF module: Administration > Modules (admin/modules)
 
@@ -56,9 +56,9 @@ the css/style.css files.
 
 - It is possible to set per-content-type and/or theme-specific templates
   which are searched for in the following order: 
-  1. node--[id].tpl.php in the module directory (supplied by the module)
-  2. node--[type].tpl.php in the module directory (supplied by the module)
-  3. node.tpl.php in the module directory (supplied by the module)
+  1. node--[id].tpl.php in the active theme directory.
+  2. node--[type].tpl.php in the active theme directory.
+  3. node.tpl.php in the active theme directory.
 
 
 API

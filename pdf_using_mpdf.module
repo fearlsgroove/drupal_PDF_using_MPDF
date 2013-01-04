@@ -5,10 +5,8 @@
  * Prints PDF for a given html node view.
  */
 
-define('PDF_USING_MPDF_MPDF_LIB_PATH', 'sites/all/libraries/mpdf');
-define('PDF_USING_MPDF_MPDF_MODULE_PATH', drupal_get_path('module', 'pdf_using_mpdf'));
-define('PDF_USING_MPDF_MPDF_API_FILE', 'mpdf.php');
 define('PDF_USING_MPDF_PDF_DEFAULT_FILENAME', '[site:name] - [node:title] - [node:changed:custom:Y-m-d]');
+define('PDF_USING_MPDF_API_FILE', 'mpdf.php');
 define('PDF_USING_MPDF_PDF_FONT_SIZE', 10);
 define('PDF_USING_MPDF_PDF_PAGE_SIZE', 'A4');
 
@@ -133,172 +131,156 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
   $page = variable_get('pdf_using_mpdf_pdf_page_size', PDF_USING_MPDF_PDF_PAGE_SIZE);
   $font_size = variable_get('pdf_using_mpdf_pdf_font_size', PDF_USING_MPDF_PDF_FONT_SIZE);
 
-  // Search for mpdf tool first.
-  $pattern = '/^mpdf.php$/';
+  // DEFAULT PDF margin Values.
+  $margin_left = 15;
+  $margin_right = 15;
+  $margin_top = 16;
+  $margin_bottom = 16;
+  $margin_header = 9;
+  $margin_footer = 9;
 
-  // Libraries module to detect mPDF library in case of multisite installation.
-  $tools = array_keys(file_scan_directory(libraries_get_path('mpdf'), $pattern));
+  // Creating Instance of mPDF Class Library.
+  $mpdf = new mPDF(
+    '',
+    array($paper_size[$page]['w'], $paper_size[$page]['h']),
+    $font_size,
+    '',
+    $margin_left,
+    $margin_right,
+    $margin_top,
+    $margin_bottom,
+    $margin_header,
+    $margin_footer
+  );
 
-  // mPDF library looked for in the module directory itself.
-  $tools = array_merge($tools, array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern)));
+  $header_left = variable_get('pdf_using_mpdf_pdf_header_left');
+  $header_center = variable_get('pdf_using_mpdf_pdf_header_center');
+  $header_right = variable_get('pdf_using_mpdf_pdf_header_right');
 
-  if (isset($tools[0])) {
-    require_once $tools[0];
-
-    // DEFAULT PDF margin Values.
-    $margin_left = 15;
-    $margin_right = 15;
-    $margin_top = 16;
-    $margin_bottom = 16;
-    $margin_header = 9;
-    $margin_footer = 9;
-
-    // Creating Instance of mPDF Class Library.
-    $mpdf = new mPDF(
-      '',
-      array($paper_size[$page]['w'], $paper_size[$page]['h']),
-      $font_size,
-      '',
-      $margin_left,
-      $margin_right,
-      $margin_top,
-      $margin_bottom,
-      $margin_header,
-      $margin_footer
+  // Enabling header option if available.
+  if ($header_left != NULL || $header_center != NULL || $header_right != NULL) {
+    $header = array(
+      'odd' => array(
+        'L' => array(
+          'content' => $header_left,
+          'font-size' => 9,
+          'font-style' => 'B',
+          'font-family' => 'serif',
+          'color' => 'gray',
+        ),
+        'C' => array(
+          'content' => $header_center,
+          'font-size' => 9,
+          'font-style' => 'B',
+          'font-family' => 'serif',
+          'color' => 'gray',
+        ),
+        'R' => array(
+          'content' => $header_right,
+          'font-size' => 9,
+          'font-style' => 'B',
+          'font-family' => 'serif',
+          'color' => 'gray',
+        ),
+        'line' => 1,
+      ),
+      'even' => array(),
     );
+    $mpdf->SetHeader($header);
+  }
 
-    $header_left = variable_get('pdf_using_mpdf_pdf_header_left');
-    $header_center = variable_get('pdf_using_mpdf_pdf_header_center');
-    $header_right = variable_get('pdf_using_mpdf_pdf_header_right');
+  $footer_left = variable_get('pdf_using_mpdf_pdf_footer_left');
+  $footer_center = variable_get('pdf_using_mpdf_pdf_footer_center');
+  $footer_right = variable_get('pdf_using_mpdf_pdf_footer_right');
 
-    // Enabling header option if available.
-    if ($header_left != NULL || $header_center != NULL || $header_right != NULL) {
-      $header = array(
-        'odd' => array(
-          'L' => array(
-            'content' => $header_left,
-            'font-size' => 9,
-            'font-style' => 'B',
-            'font-family' => 'serif',
-            'color' => 'gray',
-          ),
-          'C' => array(
-            'content' => $header_center,
-            'font-size' => 9,
-            'font-style' => 'B',
-            'font-family' => 'serif',
-            'color' => 'gray',
-          ),
-          'R' => array(
-            'content' => $header_right,
-            'font-size' => 9,
-            'font-style' => 'B',
-            'font-family' => 'serif',
-            'color' => 'gray',
-          ),
-          'line' => 1,
+  // Enabling Footer option if available.
+  if ($footer_left != NULL || $footer_center != NULL || $footer_right != NULL) {
+    $footer = array(
+      'odd' => array(
+        'L' => array(
+          'content' => $footer_left,
+          'font-size' => 9,
+          'font-style' => 'B',
+          'font-family' => 'serif',
+          'color' => 'gray',
         ),
-        'even' => array(),
-      );
-      $mpdf->SetHeader($header);
-    }
-
-    $footer_left = variable_get('pdf_using_mpdf_pdf_footer_left');
-    $footer_center = variable_get('pdf_using_mpdf_pdf_footer_center');
-    $footer_right = variable_get('pdf_using_mpdf_pdf_footer_right');
-    // Enabling Footer option if available.
-    if ($footer_left != NULL || $footer_center != NULL || $footer_right != NULL) {
-      $footer = array(
-        'odd' => array(
-          'L' => array(
-            'content' => $footer_left,
-            'font-size' => 9,
-            'font-style' => 'B',
-            'font-family' => 'serif',
-            'color' => 'gray',
-          ),
-          'C' => array(
-            'content' => $footer_center,
-            'font-size' => 9,
-            'font-style' => 'B',
-            'font-family' => 'serif',
-            'color' => 'gray',
-          ),
-          'R' => array(
-            'content' => $footer_right,
-            'font-size' => 9,
-            'font-style' => 'B',
-            'font-family' => 'serif',
-            'color' => 'gray',
-          ),
-          'line' => 1,
+        'C' => array(
+          'content' => $footer_center,
+          'font-size' => 9,
+          'font-style' => 'B',
+          'font-family' => 'serif',
+          'color' => 'gray',
         ),
-        'even' => array(),
-      );
-      $mpdf->SetFooter($footer);
-    }
+        'R' => array(
+          'content' => $footer_right,
+          'font-size' => 9,
+          'font-style' => 'B',
+          'font-family' => 'serif',
+          'color' => 'gray',
+        ),
+        'line' => 1,
+      ),
+      'even' => array(),
+    );
+    $mpdf->SetFooter($footer);
+  }
 
-    // Setting Watermark Text to PDF.
-    $text = variable_get('pdf_using_mpdf_pdf_watermark_text');
-    if (isset($text) && $text != NULL) {
-      // '0.1' opacity level (from 0.1 to 0.9).
-      $mpdf->SetWatermarkText($text, '0.1');
-      $mpdf->showWatermarkText = TRUE;
-    }
-    // Setting Author to PDF.
-    $author = variable_get('pdf_using_mpdf_pdf_set_author');
-    if (isset($author) && $author != NULL) {
-      $mpdf->SetAuthor($author);
-    }
-    // Setting Subject to PDF.
-    $subject = variable_get('pdf_using_mpdf_pdf_set_subject');
-    if (isset($subject) && $subject != NULL) {
-      $mpdf->SetSubject($subject);
-    }
+  // Setting Watermark Text to PDF.
+  $text = variable_get('pdf_using_mpdf_pdf_watermark_text');
+  if (isset($text) && $text != NULL) {
+    // '0.1' opacity level (from 0.1 to 0.9).
+    $mpdf->SetWatermarkText($text, '0.1');
+    $mpdf->showWatermarkText = TRUE;
+  }
 
-    // Setting Password to PDF.
-    $password = variable_get('pdf_using_mpdf_pdf_password');
-    if (isset($password) && $password != NULL) {
-      // Print and Copy is allowed.
-      $mpdf->SetProtection(array('print', 'copy'), $password, $password);
-    }
+  // Setting Author to PDF.
+  $author = variable_get('pdf_using_mpdf_pdf_set_author');
+  if (isset($author) && $author != NULL) {
+    $mpdf->SetAuthor($author);
+  }
 
-    // Setting CSS stylesheet to PDF.
-    $stylesheet = variable_get('pdf_using_mpdf_pdf_css_file');
+  // Setting Subject to PDF.
+  $subject = variable_get('pdf_using_mpdf_pdf_set_subject');
+  if (isset($subject) && $subject != NULL) {
+    $mpdf->SetSubject($subject);
+  }
 
-    if (isset($stylesheet) && $stylesheet != NULL) {
-      $css_file = file_scan_directory($root_path, '/.*\.css$/');
-      if (isset($css_file[$root_path . '/' . $stylesheet])) {
-        $stylesheet = file_get_contents($root_path . '/' . $stylesheet);
-        $mpdf->WriteHTML($stylesheet, 1);
-      }
-      else {
-        drupal_set_message(t('CSS style Sheet mentioned in PDF setting was not found.'), 'warning');
-        return FALSE;
-      }
-    }
-    // Writing html content for pdf buffer.
-    $mpdf->WriteHTML($html);
+  // Setting Password to PDF.
+  $password = variable_get('pdf_using_mpdf_pdf_password');
+  if (isset($password) && $password != NULL) {
+    // Print and Copy is allowed.
+    $mpdf->SetProtection(array('print', 'copy'), $password, $password);
+  }
 
-    // Generating PDF File.
-    if (variable_get('pdf_using_mpdf_pdf_save_option') == '0') {
-      // Open in same browser.
-      $mpdf->Output($filename . '.pdf', 'I');
-      exit;
+  // Setting CSS stylesheet to PDF.
+  $stylesheet = variable_get('pdf_using_mpdf_pdf_css_file');
+
+  if (isset($stylesheet) && $stylesheet != NULL) {
+    $css_file = file_scan_directory($root_path, '/.*\.css$/');
+    if (isset($css_file[$root_path . '/' . $stylesheet])) {
+      $stylesheet = file_get_contents($root_path . '/' . $stylesheet);
+      $mpdf->WriteHTML($stylesheet, 1);
     }
     else {
-      // Dialog box for Download as PDF.
-      $mpdf->Output($filename . '.pdf', 'D');
+      drupal_set_message(t('CSS style Sheet mentioned in PDF setting was not found.'), 'warning');
+      return FALSE;
     }
-    return TRUE;
+  }
+
+  // Writing html content for pdf buffer.
+  $mpdf->WriteHTML($html);
+
+  // Generating PDF File.
+  if (variable_get('pdf_using_mpdf_pdf_save_option') == '0') {
+    // Open in same browser.
+    $mpdf->Output($filename . '.pdf', 'I');
+    exit;
   }
   else {
-    drupal_set_message(t('mPDF library is not included. Please check your "!default_lib_path" directory or " /sites/your-domain-name/libraries/ directory " or "!default_module_path" directory.', array(
-      '!default_lib_path' => PDF_USING_MPDF_MPDF_LIB_PATH,
-      '!default_module_path' => PDF_USING_MPDF_MPDF_MODULE_PATH,
-    )), 'error');
-    return FALSE;
+    // Dialog box for Download as PDF.
+    $mpdf->Output($filename . '.pdf', 'D');
   }
+  return TRUE;
 }
 
 /**
@@ -319,4 +301,31 @@ function pdf_using_mpdf_api($html, $pdf_using_mpdf_pdf_filename = NULL) {
     $pdf_using_mpdf_pdf_filename = token_replace($filename[0]);
   }
   _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename);
+}
+
+/**
+ * Function to check existence of mPDF library.
+ *
+ * @return bool
+ *   TRUE if mPDF library path exists and FALSE if it isn't.
+ */
+function pdf_using_mpdf_library_exist() {
+  $tools = array();
+
+  // Search for mpdf tool first.
+  $pattern = '/^mpdf.php$/';
+
+  // Libraries module to detect mPDF library in case of multisite installation.
+  $tools = array_keys(file_scan_directory(libraries_get_path('mpdf'), $pattern));
+
+  // mPDF library looked for in the module directory itself.
+  $tools = array_merge($tools, array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern)));
+
+  if (isset($tools[0])) {
+    require_once $tools[0];
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
 }
