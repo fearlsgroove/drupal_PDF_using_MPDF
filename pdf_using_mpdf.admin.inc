@@ -181,7 +181,6 @@ function pdf_using_mpdf_config() {
  */
 function pdf_using_mpdf_config_validate($form, $form_state) {
   // Checking mPDF library existence.
-
   if (pdf_using_mpdf_library_exist() == TRUE) {
     if (isset($form_state['values']['remove_pwd'])) {
       if ($form_state['values']['remove_pwd'] == '1') {
