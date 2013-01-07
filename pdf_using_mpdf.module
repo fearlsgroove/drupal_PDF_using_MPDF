@@ -296,11 +296,13 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
  *   TRUE if PDF is successfully generated and FALSE if it isn't.
  */
 function pdf_using_mpdf_api($html, $pdf_using_mpdf_pdf_filename = NULL) {
-  if ($pdf_using_mpdf_pdf_filename === NULL) {
-    $filename = explode(variable_get('pdf_using_mpdf_pdf_filename', 'PDF_USING_MPDF_PDF_DEFAULT_FILENAME'), '[site:name]');
-    $pdf_using_mpdf_pdf_filename = token_replace($filename[0]);
+  if (pdf_using_mpdf_library_exist() == TRUE) {
+    if ($pdf_using_mpdf_pdf_filename === NULL) {
+      $filename = explode(variable_get('pdf_using_mpdf_pdf_filename', 'PDF_USING_MPDF_PDF_DEFAULT_FILENAME'), '[site:name]');
+      $pdf_using_mpdf_pdf_filename = token_replace($filename[0]);
+    }
+    _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename);
   }
-  _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename);
 }
 
 /**
