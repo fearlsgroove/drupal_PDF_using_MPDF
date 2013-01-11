@@ -29,7 +29,7 @@ function pdf_using_mpdf_requirements($phase) {
   // mPDF library looked for in the module directory itself.
   $tools = array_merge($tools, array_keys(file_scan_directory(drupal_get_path('module', 'pdf_using_mpdf'), $pattern)));
 
-  if ($phase == 'runtime' && isset($tools[0])) {
+  if (isset($tools[0])) {
     $requirements['pdf_using_mpdf_library_exist'] = array(
       'title' => $t('PDF using mPDF Library'),
       'value' => $t('Installed'),
