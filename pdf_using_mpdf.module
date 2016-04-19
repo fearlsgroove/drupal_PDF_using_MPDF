@@ -74,7 +74,11 @@ function pdf_using_mpdf_menu() {
  * @param string $filename
  *   name of the PDF file to be generated.
  */
-function _pdf_using_mpdf_generator($html, $filename = NULL) {
+function _pdf_using_mpdf_generator($html, $filename = NULL, $path = FALSE) {
+  if ($path && file_exists($full_path = $path . $filename . '.pdf')) {
+    drupal_goto(file_create_url($full_path));
+  }
+
   // International Paper Sizes ( width x height).
   $paper_size = array(
     '4A0' => array('w' => 1682, 'h' => 2378),
@@ -254,11 +258,9 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
 
   // Setting CSS stylesheet to PDF.
   $stylesheet = variable_get('pdf_using_mpdf_pdf_css_file');
-
   if (isset($stylesheet) && $stylesheet != NULL) {
-    $css_file = file_scan_directory($root_path, '/.*\.css$/');
-    if (isset($css_file[$root_path . '/' . $stylesheet])) {
-      $stylesheet = file_get_contents($root_path . '/' . $stylesheet);
+    if (file_exists($stylesheet)) {
+      $stylesheet = file_get_contents($stylesheet);
       $mpdf->WriteHTML($stylesheet, 1);
     }
     else {
@@ -270,15 +272,40 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
   // Writing html content for pdf buffer.
   $mpdf->WriteHTML($html);
 
-  // Generating PDF File.
-  if (variable_get('pdf_using_mpdf_pdf_save_option') == '0') {
-    // Open in same browser.
-    $mpdf->Output($filename . '.pdf', 'I');
-    exit;
+  if ($path) {
+    $full_path = $path . $filename . '.pdf';
+    $dir = drupal_dirname($full_path);
+    echo $dir;
+    if (!file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
+      watchdog('Coreapp PDF', 'Could not create PDF directory');
+      echo "An error occurred creating the PDF.";
+      return FALSE;
+    }
+    global $user;
+
+    $mpdf->Output($full_path, 'F');
+    $file = new stdClass();
+    $file->uri = $full_path;
+    $file->uid = $user->uid;
+    $file->filename = drupal_basename($full_path);
+    $file->status = 1;
+    $file->filemime = file_get_mimetype($full_path);
+    $file->filesize = filesize($full_path);
+    file_save($file);
+    drupal_goto(file_create_url($full_path));
   }
   else {
-    // Dialog box for Download as PDF.
-    $mpdf->Output($filename . '.pdf', 'D');
+    // Generating PDF File.
+    if (variable_get('pdf_using_mpdf_pdf_save_option') == '0') {
+      // Open in same browser.
+      $mpdf->Output($filename . '.pdf', 'I');
+      exit;
+    }
+    else {
+      // Dialog box for Download as PDF.
+      $mpdf->Output($filename . '.pdf', 'D');
+    }
+
   }
   return TRUE;
 }
@@ -295,13 +322,16 @@ function _pdf_using_mpdf_generator($html, $filename = NULL) {
  * @return bool
  *   TRUE if PDF is successfully generated and FALSE if it isn't.
  */
-function pdf_using_mpdf_api($html, $pdf_using_mpdf_pdf_filename = NULL) {
+function pdf_using_mpdf_api($html, $pdf_using_mpdf_pdf_filename = NULL, $path = FALSE) {
   if (pdf_using_mpdf_library_exist() == TRUE) {
     if ($pdf_using_mpdf_pdf_filename === NULL) {
       $filename = explode(variable_get('pdf_using_mpdf_pdf_filename', 'PDF_USING_MPDF_PDF_DEFAULT_FILENAME'), '[site:name]');
       $pdf_using_mpdf_pdf_filename = token_replace($filename[0]);
     }
-    _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename);
+    if ($path && substr($path, -1) !== '/') {
+      $path .= '/';
+    }
+    _pdf_using_mpdf_generator($html, $pdf_using_mpdf_pdf_filename, $path);
   }
   else {
     drupal_set_message(t('No mPDF Library Found in "sites/all/libraries" or "!default_module_path". Please download PHP mPDF PDF generation tool from <a href="http://www.mpdf1.com/">mPDF1.com</a>', array(
