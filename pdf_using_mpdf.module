@@ -76,6 +76,7 @@ function pdf_using_mpdf_menu() {
  */
 function _pdf_using_mpdf_generator($html, $filename = NULL, $path = FALSE) {
   if ($path && file_exists($full_path = $path . $filename . '.pdf')) {
+    watchdog('MPDF', 'Redirecting to cached file: @file', array('@file' => $full_path));
     drupal_goto(file_create_url($full_path));
   }
 
@@ -292,6 +293,8 @@ function _pdf_using_mpdf_generator($html, $filename = NULL, $path = FALSE) {
     $file->filemime = file_get_mimetype($full_path);
     $file->filesize = filesize($full_path);
     file_save($file);
+
+    watchdog('MPDF', 'Redirecting to newly created file: @file', array('@file' => $full_path));
     drupal_goto(file_create_url($full_path));
   }
   else {
