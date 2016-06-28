@@ -282,8 +282,11 @@ function _pdf_using_mpdf_generator($html, $filename = NULL, $path = FALSE) {
       echo "An error occurred creating the PDF.";
       return FALSE;
     }
-    global $user;
 
+    // If the file already exists in the database, remove it to avoid errors
+    db_query('DELETE FROM {file_managed} WHERE uri = :uri', array(':uri' => $full_path));
+
+    global $user;
     $mpdf->Output($full_path, 'F');
     $file = new stdClass();
     $file->uri = $full_path;
